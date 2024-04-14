@@ -75,7 +75,12 @@
 ### Move images into static - ✓
 ### Add Games list - ✓
 ### Add Auth Pages -  ✓
-### Refactor -
+### Refactor - ✓
 ### Setup tailwind properly - 
 ### Setup htmx properly -
-### Setup fonts properly - 
+### Setup fonts properly -
+### Make nav correctly track path - 
+
+# Bugs
+
+## Using browser back on 404 does not return the full layout - 

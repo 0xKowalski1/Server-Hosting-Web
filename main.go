@@ -8,6 +8,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/a-h/templ"
+
+	"0xKowalski1/server-hosting-web/templates"
 )
 
 func Render(ctx echo.Context, statusCode int, t templ.Component) error {
@@ -16,29 +18,29 @@ func Render(ctx echo.Context, statusCode int, t templ.Component) error {
 
 	// Always return layout if not HTMX request, Layout will fetch the page routes SPA style
 	if ctx.Request().Header.Get("HX-Request") == "" {
-		return Layout().Render(ctx.Request().Context(), ctx.Response().Writer)
+		return templates.Layout().Render(ctx.Request().Context(), ctx.Response().Writer)
 	}
 
 	return t.Render(ctx.Request().Context(), ctx.Response().Writer)
 }
 
 func HomeHandler(c echo.Context) error {
-	return Render(c, http.StatusOK, HomePage())
+	return Render(c, http.StatusOK, templates.HomePage())
 }
 
 func GamesHandler(c echo.Context) error {
 	// Get Games
-	return Render(c, http.StatusOK, GamesPage())
+	return Render(c, http.StatusOK, templates.GamesPage())
 }
 
 func LoginHandler(c echo.Context) error {
 	// Get Games
-	return Render(c, http.StatusOK, LoginPage())
+	return Render(c, http.StatusOK, templates.LoginPage())
 }
 
 func SignupHandler(c echo.Context) error {
 	// Get Games
-	return Render(c, http.StatusOK, SignupPage())
+	return Render(c, http.StatusOK, templates.SignupPage())
 }
 
 func main() {

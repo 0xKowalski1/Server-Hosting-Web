@@ -75,5 +75,7 @@
 ### Move images into static - ✓
 ### Add Games list - ✓
 ### Add Auth Pages -  ✓
-### Refactor - 
-
+### Refactor -
+### Setup tailwind properly - 
+### Setup htmx properly -
+### Setup fonts properly - 

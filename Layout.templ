@@ -1,30 +1,6 @@
 package main
 
-templ Layout(){
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>InterstellarHosts</title>
-  <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"/>
- <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
-  <link rel="icon" type="image/x-icon" href="/images/logo.jpg"/>
-
-  <!-- TEMP UNTIL TAILWIND IS SETUP -->
-  <style>
-  .font-header {
-        font-family: "Press Start 2P", system-ui;
-  }
-  body{
-      font-family: "Roboto", sans-serif;
-  }
-</style>
-</head>
-<body class="bg-gray-900 text-white">
-
+templ header(){
     <!-- Navbar -->
 <nav class="w-full">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -60,10 +36,44 @@ templ Layout(){
   </div>
   </div>
 </nav>
+}
+
+templ footer(){
+<footer> </footer>
+}
+
+templ Layout(){
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>InterstellarHosts</title>
+  <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"/>
+ <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+  <link rel="icon" type="image/x-icon" href="/images/logo.jpg"/>
+
+  <!-- TEMP UNTIL TAILWIND IS SETUP -->
+  <style>
+  .font-header {
+        font-family: "Press Start 2P", system-ui;
+  }
+  body{
+      font-family: "Roboto", sans-serif;
+  }
+</style>
+</head>
+<body class="bg-gray-900 text-white">
+
+@header()
 
 <main id='content' hx-trigger="load" hx-swap="innerHTML">
 <!-- SPA renders content here --> 
 </main>
+
+@footer()
 
 <script>
     // For nav

@@ -91,10 +91,11 @@
 
 ## Games Page
 ### Get Games from DB -  ✓
-### Allow Search for games - 
+### Allow Search for games - ✓
 
 # Unimportant
 
+### Handle errors in games page - 
 ### Put fonts in build -
 ### Navbar is not mobile responsive - 
 

@@ -19,11 +19,18 @@ func NewGameHandler(db *gorm.DB) *GameHandler {
 }
 
 func (gh *GameHandler) GetGames(c echo.Context) error {
-	games, err := gh.Service.GetGames()
+	searchQuery := c.QueryParam("search")
+
+	games, err := gh.Service.GetGames(searchQuery)
 
 	if err != nil {
 		// DO something
+		return err
 	}
 
-	return Render(c, 200, templates.GamesPage(games))
+	if c.Request().Header.Get("X-Partial-Content") == "true" {
+		return Render(c, 200, templates.GamesList(games))
+	} else {
+		return Render(c, 200, templates.GamesPage(games))
+	}
 }

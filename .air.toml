@@ -2,8 +2,8 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-  bin = "./tmp/main"
-  cmd = "nix run github:a-h/templ generate && go build -o ./tmp/main ."
+  bin = "./tmp/app"
+  cmd = "nix run github:a-h/templ generate && go build -o ./tmp/app ./cmd/app/main.go"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor"]
   exclude_file = []

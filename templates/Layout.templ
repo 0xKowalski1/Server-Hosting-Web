@@ -100,12 +100,12 @@ templ header(){
     <!-- End of Logo -->
 
     <!-- Main Nav -->
-    <div id="main-nav" class="md:flex md:flex-grow md:items-center">
-      <ul class="flex flex-row space-x-8 ml-auto">
+    <div id="main-nav" class="flex flex-grow justify-between items-center">
+      <ul class="flex flex-row space-x-4 ml-auto">
         <li><a href="/" hx-get="/" hx-target="#content" hx-swap="innerHTML" hx-push-url="/" class="py-2 px-3 hover:text-blue-700">Home</a></li>
         <li><a href="/games" hx-get="/games" hx-target="#content" hx-swap="innerHTML" hx-push-url="/games" class="py-2 px-3 hover:text-blue-700">Games</a></li>
-        <li><a href="/gameservers" class="py-2 px-3 hover:text-blue-700">Gameservers</a></li>
-        <li><a href="/profile" class="py-2 px-3 hover:text-blue-700">Profile</a></li>
+        <li><a href="/support" hx-get="/support" hx-target="#content" hx-swap="innerHTML" hx-push-url="/support" class="py-2 px-3 hover:text-blue-700">Support</a></li>
+        <li><a href="/profile" hx-get="/profile" hx-target="#content" hx-swap="innerHTML" hx-push-url="/profile" class="py-2 px-3 hover:text-blue-700">Profile</a></li>
       </ul>
     </div>
     <!-- End of Main Nav -->

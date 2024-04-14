@@ -68,7 +68,7 @@
 
 # TODO
 
-## Convert Mockup to start of web app - 
+## Convert Mockup to start of web app - ✓ 
 ### Decide on tech stack - Go, Echo, Templ, HTMX, Tailwind
 ### Set up layout - ✓
 ### Setup nav - ✓
@@ -78,15 +78,27 @@
 ### Refactor - ✓
 ### Setup tailwind properly -  ✓
 ### Setup htmx properly - ✓
-### Make nav correctly track path -
+### Make nav correctly track path - ✓
 
+## Auth -
+### Email Verification -
+### Google OAuth - 
+### Discord OAuth -
+
+## 404 Page -
+
+## Forgot Password -
+
+## Games Page
+### Get Games from DB -  ✓
+### Allow Search for games - 
 
 # Unimportant
+
 ### Put fonts in build -
 ### Navbar is not mobile responsive - 
 
 # Bugs
 
 ## Using browser back on 404 does not return the full layout -
-
 ## Build proccess does not correctly set env to production -

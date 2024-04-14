@@ -13,11 +13,15 @@ templ-watch:
 	
 .PHONY: dev
 dev:
-	go build -o ./tmp/$(APP_NAME) ./$(APP_NAME)/main.go && air
+	go run ./cmd/seed/seed.go
+	go build -o ./tmp/app ./cmd/app/main.go && air
 
 .PHONY: build
 build:
 	make tailwind-build
 	make templ-generate
-	go build -ldflags "-X main.Environment=production" -o ./bin/$(APP_NAME) ./$(APP_NAME)/main.go
+	go build -ldflags "-X main.Environment=production" -o ./bin/app ./cmd/app/main.go
 
+.PHONY: seed
+seed:
+	go run ./cmd/seed/seed.go

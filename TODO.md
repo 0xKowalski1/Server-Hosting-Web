@@ -76,8 +76,8 @@
 ### Add Games list - ✓
 ### Add Auth Pages -  ✓
 ### Refactor - ✓
-### Setup tailwind properly - 
-### Setup htmx properly -
+### Setup tailwind properly -  ✓
+### Setup htmx properly - ✓
 ### Setup fonts properly -
 ### Make nav correctly track path - 
 

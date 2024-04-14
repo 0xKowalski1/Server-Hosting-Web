@@ -83,4 +83,6 @@
 
 # Bugs
 
-## Using browser back on 404 does not return the full layout - 
+## Using browser back on 404 does not return the full layout -
+
+## Build proccess does not correctly set env to production -

@@ -1,5 +1,9 @@
 package templates
 
+import (
+    "os"
+)
+
 templ Layout(){
 <!DOCTYPE html>
 <html lang="en">
@@ -8,22 +12,19 @@ templ Layout(){
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>InterstellarHosts</title>
   <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"/>
  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+
   <link rel="icon" type="image/x-icon" href="/images/logo.jpg"/>
 
-  <!-- TEMP UNTIL TAILWIND IS SETUP -->
-  <style>
-  .font-header {
-        font-family: "Press Start 2P", system-ui;
-  }
-  body{
-      font-family: "Roboto", sans-serif;
-  }
-</style>
+  	if os.Getenv("env") == "production" {
+			<link rel="stylesheet" href="/css/style.min.css" />
+		} else {
+			<link rel="stylesheet" href="/css/style.css" />
+		}
+
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 text-white font-main">
 
 @header()
 

@@ -78,8 +78,12 @@
 ### Refactor - ✓
 ### Setup tailwind properly -  ✓
 ### Setup htmx properly - ✓
-### Setup fonts properly -
-### Make nav correctly track path - 
+### Make nav correctly track path -
+
+
+# Unimportant
+### Put fonts in build -
+### Navbar is not mobile responsive - 
 
 # Bugs
 

@@ -26,12 +26,32 @@ func HomeHandler(c echo.Context) error {
 	return Render(c, http.StatusOK, HomePage())
 }
 
+func GamesHandler(c echo.Context) error {
+	// Get Games
+	return Render(c, http.StatusOK, GamesPage())
+}
+
+func LoginHandler(c echo.Context) error {
+	// Get Games
+	return Render(c, http.StatusOK, LoginPage())
+}
+
+func SignupHandler(c echo.Context) error {
+	// Get Games
+	return Render(c, http.StatusOK, SignupPage())
+}
+
 func main() {
 	e := echo.New()
+
+	e.Static("/", "assets")
 
 	e.Use(middleware.Logger())
 
 	e.GET("/", HomeHandler)
+	e.GET("/games", GamesHandler)
+	e.GET("/login", LoginHandler)
+	e.GET("/signup", SignupHandler)
 
 	fmt.Println("Listening on :3000")
 	e.Logger.Fatal(e.Start(":3000"))

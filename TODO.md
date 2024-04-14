@@ -68,8 +68,12 @@
 
 # TODO
 
-## Decide on tech stack - Go, Echo, Templ, HTMX, Tailwind
-## Set up layout - ✓
-## Setup nav - ✓
-## Move images into static - 
+## Convert Mockup to start of web app - 
+### Decide on tech stack - Go, Echo, Templ, HTMX, Tailwind
+### Set up layout - ✓
+### Setup nav - ✓
+### Move images into static - ✓
+### Add Games list - ✓
+### Add Auth Pages -  ✓
+### Refactor - 
 

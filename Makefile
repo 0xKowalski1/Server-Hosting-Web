@@ -1,7 +1,7 @@
 .PHONY: tailwind-build
 tailwind-build:
-	nix-shell -p tailwindcss --run "tailwindcss -i ./assets/css/input.css -o ./assets/css/style.css"
-	nix-shell -p tailwindcss --run "tailwindcss -i ./assets/css/input.css -o ./assets/css/style.min.css --minify"
+	nix-shell -p tailwindcss --run "tailwindcss -i ./assets/css/input.css -o ./assets/css/tailwind.css"
+	nix-shell -p tailwindcss --run "tailwindcss -i ./assets/css/input.css -o ./assets/css/tailwind.min.css --minify"
 
 .PHONY: templ-generate
 templ-generate:

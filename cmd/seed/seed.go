@@ -22,4 +22,8 @@ func main() {
 	for _, game := range games {
 		db.Create(&game)
 	}
+
+	// Seed User
+	db.Migrator().DropTable(&models.User{})
+	db.AutoMigrate(&models.User{})
 }

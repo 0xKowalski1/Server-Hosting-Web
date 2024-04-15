@@ -1,10 +1,12 @@
 package templates
 
 import (
-    "os"
+
+    "0xKowalski1/server-hosting-web/models"
+
 )
 
-templ Layout(){
+templ Layout(user *models.User){
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,16 +19,13 @@ templ Layout(){
 
   <link rel="icon" type="image/x-icon" href="/images/logo.jpg"/>
 
-  	if os.Getenv("env") == "production" {
-			<link rel="stylesheet" href="/css/tailwind.min.css" />
-		} else {
-			<link rel="stylesheet" href="/css/tailwind.css" />
-		}
+  <script src="https://cdn.tailwindcss.com"></script>
+
 
 </head>
 <body class="bg-gray-900 text-white font-main">
 
-@header()
+@header(user)
 
 <main id='content' hx-trigger="load" hx-swap="innerHTML">
 <!-- SPA renders content here --> 
@@ -88,7 +87,7 @@ document.addEventListener('htmx:load', function() {
 </html>
 }
 
-templ header(){
+templ header(user *models.User){
     <!-- Navbar -->
     <nav class="w-full text-white">
   <div class="max-w-screen-xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between">
@@ -110,15 +109,26 @@ templ header(){
     </div>
     <!-- End of Main Nav -->
 
-    <!-- Auth -->
-    <div class="flex space-x-3 md:ml-4">
-      <a href="/login" hx-get="/login" hx-target="#content" hx-swap="innerHTML" hx-push-url="/login" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center">Log In</a>
-      <a href="/signup" hx-get="/signup" hx-target="#content" hx-swap="innerHTML" hx-push-url="/signup" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center">Sign Up</a>
-    </div>
-    <!-- End of Auth -->
+        @auth(user)
   </div>
 </nav>
 
+}
+
+templ auth(user *models.User){
+    if user != nil {
+            <div class="flex space-x-3 md:ml-4">
+      <a href="/profile/gameservers" hx-get="/profile/gameservers" hx-target="#content" hx-swap="innerHTML" hx-push-url="/profile/gameservers" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center">My Gameservers</a>
+      <a href="/logout" hx-get="/logout" hx-target="#content" hx-swap="innerHTML" hx-push-url="/logout" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center">Log Out</a>
+    </div>
+    }else{
+    <!-- Auth -->
+    <div class="flex space-x-3 md:ml-4">
+      <a href="/get-started" hx-get="/get-started" hx-target="#content" hx-swap="innerHTML" hx-push-url="/get-started" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center">Get Started</a>
+      <a href="/login" hx-get="/login" hx-target="#content" hx-swap="innerHTML" hx-push-url="/login" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center">Log In</a>
+    </div>
+    <!-- End of Auth -->
+    }
 }
 
 templ footer(){

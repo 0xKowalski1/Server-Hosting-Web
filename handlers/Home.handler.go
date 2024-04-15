@@ -13,6 +13,6 @@ func NewHomeHandler() *HomeHandler {
 	return &HomeHandler{}
 }
 
-func (ah *HomeHandler) GetHome(c echo.Context) error {
+func (hh *HomeHandler) GetHome(c echo.Context) error {
 	return Render(c, 200, templates.HomePage())
 }

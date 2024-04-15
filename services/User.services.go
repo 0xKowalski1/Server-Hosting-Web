@@ -2,6 +2,7 @@ package services
 
 import (
 	"0xKowalski1/server-hosting-web/models"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -30,11 +31,12 @@ func (service *UserService) FindOrCreateUser(unknownUser models.User) (models.Us
 	return user, nil
 }
 
-func (service *UserService) GetUser(userID string) (models.User, error) {
-	var user models.User
-	result := service.DB.First(&user, userID) // Find user by ID
+func (service *UserService) GetUser(userID string) (*models.User, error) {
+	var user *models.User
+	result := service.DB.Where("id = ?", userID).First(&user)
 	if result.Error != nil {
-		return models.User{}, result.Error // Return error if the user is not found or any other error occurs
+		log.Printf("User not found: %s, error: %v", userID, result.Error)
+		return nil, result.Error
 	}
 	return user, nil
 }

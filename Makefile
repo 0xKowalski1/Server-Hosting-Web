@@ -3,6 +3,10 @@ tailwind-build:
 	nix-shell -p tailwindcss --run "tailwindcss -i ./assets/css/input.css -o ./assets/css/tailwind.css"
 	nix-shell -p tailwindcss --run "tailwindcss -i ./assets/css/input.css -o ./assets/css/tailwind.min.css --minify"
 
+.PHONY: tailwind-watch
+tailwind-watch: 
+	nix-shell -p tailwindcss --run "tailwindcss -i ./assets/css/input.css -o ./assets/css/tailwind.css --watch"
+
 .PHONY: templ-generate
 templ-generate:
 	nix run github:a-h/templ generate

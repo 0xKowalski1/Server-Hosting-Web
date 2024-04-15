@@ -81,9 +81,7 @@
 ### Make nav correctly track path - ✓
 
 ## Auth -
-### Standard Auth - 
-### Email Verification -
-### Google OAuth - 
+### Google OAuth -  ✓
 ### Discord OAuth -
 
 ## 404 Page -
@@ -102,10 +100,12 @@
 
 # Bugs
 
+## Log out button not showing as red - 
 ## Using browser back on 404 does not return the full layout -
 ## Build proccess does not correctly set env to production -
 ## Search bar 'x' is blue and hard to see -
-## Everything shifts when you all the search results disappear (games, due to scrollbar disappearing) - 
+## Everything shifts when you all the search results disappear (games, due to scrollbar disappearing) -
+## Tailwind was purging classes (like bg-red-700) that I was using, switched to CDN for now - 
 
 # Before Relase
 ## Cors -

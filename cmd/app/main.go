@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/labstack/echo/v4"
 	//	"github.com/labstack/echo/v4/middleware"
@@ -21,9 +22,6 @@ func main() {
 	// Static assets
 	e.Static("/", "assets")
 
-	// Middleware
-	//e.Use(middleware.Logger())
-
 	// Services
 	AuthService := services.NewAuthService(database)
 	UserService := services.NewUserService(database)
@@ -33,8 +31,11 @@ func main() {
 	GameHandler := handlers.NewGameHandler(database)
 	AuthHandler := handlers.NewAuthHandler(AuthService, UserService)
 
-	// Routes
+	// Middleware
+	//e.Use(middleware.Logger())
+	e.Use(AttachUserToContext(AuthService, UserService))
 
+	// Routes
 	/// Home
 	e.GET("/", HomeHandler.GetHome)
 
@@ -43,10 +44,32 @@ func main() {
 
 	/// Auth
 	e.GET("/login", AuthHandler.GetLogin)
-	e.GET("/signup", AuthHandler.GetSignup)
 	e.GET("/auth/:provider", AuthHandler.BeginAuth)
 	e.GET("/auth/:provider/callback", AuthHandler.AuthCallback)
 
 	fmt.Printf("Listening on :%s", config.Envs.Port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", config.Envs.Port)))
+}
+
+func AttachUserToContext(authService *services.AuthService, userService *services.UserService) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			authUser, err := authService.GetUserFromSession(c)
+			if err != nil {
+				log.Printf("Failed to get user from session: %v", err)
+				c.Set("user", nil)
+				return next(c)
+			}
+
+			dbUser, err := userService.GetUser(authUser.UserID)
+			if err != nil {
+				log.Printf("Failed to get user from DB: %v", err)
+				c.Set("user", nil)
+				return next(c)
+			}
+
+			c.Set("user", dbUser)
+			return next(c)
+		}
+	}
 }

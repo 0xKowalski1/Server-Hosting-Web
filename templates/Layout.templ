@@ -3,7 +3,6 @@ package templates
 import (
 
     "0xKowalski1/server-hosting-web/models"
-
 )
 
 templ Layout(user *models.User){
@@ -38,7 +37,7 @@ templ Layout(user *models.User){
 <script>
     // For nav
 document.addEventListener('DOMContentLoaded', function() {
-    function loadContent() {
+    function loadContent() { 
         const contentDiv = document.getElementById('content');
         if (contentDiv) {
             htmx.ajax('GET', window.location.pathname, contentDiv);

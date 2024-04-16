@@ -2,13 +2,14 @@ package services
 
 import (
 	"0xKowalski1/server-hosting-web/config"
+	"0xKowalski1/server-hosting-web/models"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
+	"github.com/markbates/goth/providers/discord"
 	"github.com/markbates/goth/providers/google"
 
 	"gorm.io/gorm"
@@ -25,6 +26,7 @@ func NewAuthService(db *gorm.DB) *AuthService {
 
 	goth.UseProviders(
 		google.New(config.Envs.GoogleClientID, config.Envs.GoogleClientSecret, buildCallbackURL("google")),
+		discord.New(config.Envs.DiscordClientID, config.Envs.DiscordClientSecret, buildCallbackURL("discord"), discord.ScopeIdentify, discord.ScopeEmail),
 	)
 	return &AuthService{DB: db}
 }
@@ -63,17 +65,18 @@ func (service *AuthService) GetUserFromSession(c echo.Context) (goth.User, error
 
 func (service *AuthService) RequireAuth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// Get user from session
-		authUser, err := service.GetUserFromSession(c)
-		if err != nil {
-			log.Println("User is not authenticated:", err)
+		// User set in previous middleware
+		userInterface := c.Get("user")
+		if userInterface == nil {
 			return c.Redirect(http.StatusTemporaryRedirect, "/login")
+		} else {
+			_, ok := userInterface.(*models.User)
+			if ok {
+				return next(c)
+			} else {
+				return c.Redirect(http.StatusTemporaryRedirect, "/login")
+			}
 		}
-
-		log.Printf("User is authenticated! user: %v", authUser)
-		// Store user in context if needed or pass as is
-		c.Set("user", authUser)
-		return next(c)
 	}
 }
 

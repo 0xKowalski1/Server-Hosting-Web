@@ -48,6 +48,8 @@
 
 ## Auth Required
 
+### Payment form - 
+
 ### Profile -
 
 ### Gameservers Management -
@@ -82,11 +84,16 @@
 
 ## Auth -
 ### Google OAuth -  ✓
-### Discord OAuth -
+### Discord OAuth - ✓
+### Style Auth Page -
+### Ensure auth is enforced - 
+### Ensure email is unique -
+### Ensure correct errors are displayed - 
+
+## Toasts -
+### Allow for basic errors with toasts - 
 
 ## 404 Page -
-
-## Forgot Password -
 
 ## Games Page
 ### Get Games from DB -  ✓
@@ -96,7 +103,8 @@
 
 ### Handle errors in games page - 
 ### Put fonts in build -
-### Navbar is not mobile responsive - 
+### Navbar is not mobile responsive -
+### First route currently results in two requests, one for layout and one for content, should only be one request for SEO - 
 
 # Bugs
 

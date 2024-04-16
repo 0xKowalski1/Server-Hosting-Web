@@ -20,6 +20,8 @@ type Config struct {
 	GoogleClientID     string
 	GoogleClientSecret string
 	// Discord
+	DiscordClientID     string
+	DiscordClientSecret string
 }
 
 var Envs = initConfig()
@@ -40,6 +42,8 @@ func initConfig() Config {
 		GoogleClientID:     getEnv("GOOGLE_CLIENT_ID"),
 		GoogleClientSecret: getEnv("GOOGLE_CLIENT_SECRET"),
 		// Discord
+		DiscordClientID:     getEnv("DISCORD_CLIENT_ID"),
+		DiscordClientSecret: getEnv("DISCORD_CLIENT_SECRET"),
 	}
 }
 

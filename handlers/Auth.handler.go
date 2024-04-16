@@ -72,6 +72,8 @@ func (ah *AuthHandler) AuthCallback(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Authentication failed")
 	}
 
+	log.Println(authUser)
+
 	_, err = ah.userService.FindOrCreateUser(models.User{Provider: provider, ID: authUser.UserID, Email: authUser.Email})
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create or find user")

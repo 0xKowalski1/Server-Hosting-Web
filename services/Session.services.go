@@ -11,12 +11,12 @@ import (
 // Secure
 
 func NewSessionStore() *sessions.CookieStore {
-	store := sessions.NewCookieStore([]byte("my-secret"))
+	store := sessions.NewCookieStore([]byte("my-secret")) // take me from config
 
-	store.MaxAge(60 * 60 * 24 * 2)
+	store.MaxAge(60 * 60 * 24 * 7) // Sessions valid for 7 days
 	store.Options.Path = "/"
-	store.Options.HttpOnly = false
-	store.Options.Secure = false
+	store.Options.HttpOnly = false // Take me from config
+	store.Options.Secure = false   // me too
 
 	return store
 }

@@ -28,6 +28,10 @@ func (ah *AuthHandler) GetLogin(c echo.Context) error {
 	return Render(c, 200, templates.LoginPage())
 }
 
+func (ah *AuthHandler) PostLogout(c echo.Context) error {
+	return ah.authService.LogoutUser(c)
+}
+
 func (ah *AuthHandler) BeginAuth(c echo.Context) error {
 	w := c.Response().Writer
 	r := c.Request()

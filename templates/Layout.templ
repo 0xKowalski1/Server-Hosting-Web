@@ -5,7 +5,7 @@ import (
     "0xKowalski1/server-hosting-web/models"
 )
 
-templ Layout(user *models.User){
+templ Layout(content templ.Component, user *models.User){
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,8 +26,9 @@ templ Layout(user *models.User){
 
 @header(user)
 
-<main id='content' hx-trigger="load" hx-swap="innerHTML">
+<main id='content' hx-swap="innerHTML">
 <!-- SPA renders content here --> 
+@content
 </main>
 
 @footer()
@@ -35,27 +36,7 @@ templ Layout(user *models.User){
 
 
 <script>
-    // For nav
-document.addEventListener('DOMContentLoaded', function() {
-    function loadContent() { 
-        const contentDiv = document.getElementById('content');
-        if (contentDiv) {
-            htmx.ajax('GET', window.location.pathname, contentDiv);
-        }
-    }
 
-    // Attach the event listener for handling browser navigation events
-    window.addEventListener('popstate', function(event) {
-        loadContent();
-    });
-
-    // Load content initially 
-    const contentDiv = document.getElementById('content');
-    if (!contentDiv.getAttribute('hx-get')) {
-        contentDiv.setAttribute('hx-get', window.location.pathname);
-        loadContent();
-    }
-});
 
 document.addEventListener('htmx:load', function() {
     function updateActiveNav() {
@@ -118,7 +99,7 @@ templ auth(user *models.User){
     if user != nil {
             <div class="flex space-x-3 md:ml-4">
       <a href="/profile/gameservers" hx-get="/profile/gameservers" hx-target="#content" hx-swap="innerHTML" hx-push-url="/profile/gameservers" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center">My Gameservers</a>
-      <a href="/logout" hx-get="/logout" hx-target="#content" hx-swap="innerHTML" hx-push-url="/logout" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center">Log Out</a>
+      <a href="/logout" hx-post="/logout" hx-target="#content" hx-swap="innerHTML" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center">Log Out</a> 
     </div>
     }else{
     <!-- Auth -->

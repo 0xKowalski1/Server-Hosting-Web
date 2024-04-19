@@ -48,6 +48,25 @@ func (service *AuthService) StoreUserSession(c echo.Context, authUser goth.User)
 	return nil
 }
 
+func (service *AuthService) LogoutUser(c echo.Context) error {
+	session, err := gothic.Store.Get(c.Request(), "user_session")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to get session: "+err.Error())
+	}
+
+	// Delete the session values
+	session.Values["user"] = nil
+	session.Options.MaxAge = -1 // This deletes the cookie
+
+	err = session.Save(c.Request(), c.Response().Writer)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to save session: "+err.Error())
+	}
+
+	//
+	return c.Redirect(http.StatusSeeOther, "/") // Redirect to home
+}
+
 func (service *AuthService) GetUserFromSession(c echo.Context) (goth.User, error) {
 	session, err := gothic.Store.Get(c.Request(), "user_session")
 

@@ -85,10 +85,12 @@
 ## Auth -
 ### Google OAuth -  ✓
 ### Discord OAuth - ✓
+### Log out button - 
 ### Style Auth Page -
 ### Ensure auth is enforced - 
 ### Ensure email is unique -
-### Ensure correct errors are displayed - 
+### Ensure correct errors are displayed -
+### Put cookie store secret in config - 
 
 ## Toasts -
 ### Allow for basic errors with toasts - 
@@ -108,7 +110,7 @@
 
 # Bugs
 
-## Log out button not showing as red - 
+## Log out button not showing as red -  ✓
 ## Using browser back on 404 does not return the full layout -
 ## Build proccess does not correctly set env to production -
 ## Search bar 'x' is blue and hard to see -
@@ -117,4 +119,5 @@
 
 # Before Relase
 ## Cors -
-## Oauth Tokens - 
+## Oauth Tokens -
+## Cookies - 

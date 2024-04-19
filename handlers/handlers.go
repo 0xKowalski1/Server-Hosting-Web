@@ -16,18 +16,14 @@ func Render(ctx echo.Context, statusCode int, t templ.Component) error {
 	if ctx.Request().Header.Get("HX-Request") == "" {
 		var user *models.User
 		userInterface := ctx.Get("user")
-		if userInterface == nil {
-			user = nil
-		} else {
+		if userInterface != nil {
 			userConversion, ok := userInterface.(*models.User)
 			if ok {
 				user = userConversion
-			} else {
-				user = nil
 			}
 		}
 
-		return templates.Layout(user).Render(ctx.Request().Context(), ctx.Response().Writer)
+		return templates.Layout(t, user).Render(ctx.Request().Context(), ctx.Response().Writer)
 	}
 
 	return t.Render(ctx.Request().Context(), ctx.Response().Writer)

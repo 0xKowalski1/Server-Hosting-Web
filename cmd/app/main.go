@@ -44,6 +44,7 @@ func main() {
 
 	/// Auth
 	e.GET("/login", AuthHandler.GetLogin)
+	e.POST("/logout", AuthHandler.PostLogout)
 	e.GET("/auth/:provider", AuthHandler.BeginAuth)
 	e.GET("/auth/:provider/callback", AuthHandler.AuthCallback)
 
@@ -51,6 +52,7 @@ func main() {
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", config.Envs.Port)))
 }
 
+// Should be in a middleware dir
 func AttachUserToContext(authService *services.AuthService, userService *services.UserService) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {

@@ -44,7 +44,7 @@ func main() {
 
 	/// Auth
 	e.GET("/login", AuthHandler.GetLogin)
-	e.POST("/logout", AuthHandler.PostLogout)
+	e.GET("/logout", AuthHandler.PostLogout)
 	e.GET("/auth/:provider", AuthHandler.BeginAuth)
 	e.GET("/auth/:provider/callback", AuthHandler.AuthCallback)
 

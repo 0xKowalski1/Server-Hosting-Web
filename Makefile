@@ -13,11 +13,13 @@ templ-generate:
 
 .PHONY: templ-watch
 templ-watch:
-	nix run github:a-h/templ generate --watch
+	nix run github:a-h/templ -- generate --watch
 	
 .PHONY: dev
 dev:
 	go run ./cmd/seed/seed.go
+	make tailwind-watch &
+	make templ-watch &
 	go build -o ./tmp/app ./cmd/app/main.go && air
 
 .PHONY: build

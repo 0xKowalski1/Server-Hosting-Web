@@ -30,6 +30,7 @@ func main() {
 	HomeHandler := handlers.NewHomeHandler()
 	GameHandler := handlers.NewGameHandler(database)
 	AuthHandler := handlers.NewAuthHandler(AuthService, UserService)
+	GameserverHandler := handlers.NewGameserverHandler(database)
 
 	// Middleware
 	//e.Use(middleware.Logger())
@@ -40,13 +41,18 @@ func main() {
 	e.GET("/", HomeHandler.GetHome)
 
 	/// Games
-	e.GET("/games", GameHandler.GetGames, AuthService.RequireAuth)
+	e.GET("/games", GameHandler.GetGames)
 
 	/// Auth
 	e.GET("/login", AuthHandler.GetLogin)
 	e.GET("/logout", AuthHandler.PostLogout)
 	e.GET("/auth/:provider", AuthHandler.BeginAuth)
 	e.GET("/auth/:provider/callback", AuthHandler.AuthCallback)
+
+	/// Profile
+	e.GET("/profile/gameservers", GameserverHandler.GetGameservers, AuthService.RequireAuth)
+	e.GET("/profile/gameservers/new", GameserverHandler.NewGameserverForm, AuthService.RequireAuth)
+	e.POST("/profile/gameservers", GameserverHandler.CreateGameserver, AuthService.RequireAuth)
 
 	fmt.Printf("Listening on :%s", config.Envs.Port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", config.Envs.Port)))

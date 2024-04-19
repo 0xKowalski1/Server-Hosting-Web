@@ -27,5 +27,10 @@ func (service *GameService) GetGames(searchQuery string) ([]models.Game, error) 
 	}
 
 	result := query.Find(&games)
-	return games, result.Error
+	// handle errors
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return games, nil
 }

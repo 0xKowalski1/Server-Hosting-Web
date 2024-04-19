@@ -7,7 +7,7 @@
 #### Games - ✓ 
 #### Support -
 #### Profile when authed - 
-#### Sign in/Sign up buttons when not authed -
+#### Sign in/Getting Started when not authed -
 #### My Gameservers/Log Out button when authed - 
 
 ### Footer
@@ -36,13 +36,6 @@
 ## Advanced
 
 ### Log In Page -
-#### Standard log in form - 
-#### Continue with google - 
-#### Continue with discord -
-
-### Sign Up Page - 
-#### Standard sign up form -
-#### With password confirm & Accept T&C's - 
 #### Continue with google - 
 #### Continue with discord -
 
@@ -85,12 +78,13 @@
 ## Auth -
 ### Google OAuth -  ✓
 ### Discord OAuth - ✓
-### Log out button - 
+### Log out button -  ✓
 ### Style Auth Page -
 ### Ensure auth is enforced - 
 ### Ensure email is unique -
 ### Ensure correct errors are displayed -
 ### Put cookie store secret in config - 
+### Logout shouldent always full reload / - 
 
 ## Toasts -
 ### Allow for basic errors with toasts - 

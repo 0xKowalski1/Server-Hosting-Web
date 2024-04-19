@@ -26,4 +26,9 @@ func main() {
 	// Seed User
 	db.Migrator().DropTable(&models.User{})
 	db.AutoMigrate(&models.User{})
+
+	// Seed Gameserver
+	db.Migrator().DropTable(&models.Gameserver{})
+	db.AutoMigrate(&models.Gameserver{})
+
 }

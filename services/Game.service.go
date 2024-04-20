@@ -4,6 +4,7 @@ import (
 	"0xKowalski1/server-hosting-web/models"
 	"strings"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -33,4 +34,20 @@ func (service *GameService) GetGames(searchQuery string) ([]models.Game, error) 
 	}
 
 	return games, nil
+}
+
+func (service *GameService) GetGameByID(gameID string) (models.Game, error) {
+	var game models.Game
+
+	id, err := uuid.Parse(gameID)
+	if err != nil {
+		return game, err
+	}
+
+	result := service.DB.First(&game, "id = ?", id)
+	if result.Error != nil {
+		return game, result.Error
+	}
+
+	return game, nil
 }

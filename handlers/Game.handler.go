@@ -5,23 +5,22 @@ import (
 	"0xKowalski1/server-hosting-web/templates"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 type GameHandler struct {
-	Service *services.GameService
+	GameService *services.GameService
 }
 
-func NewGameHandler(db *gorm.DB) *GameHandler {
+func NewGameHandler(gameService *services.GameService) *GameHandler {
 	return &GameHandler{
-		Service: services.NewGameService(db),
+		GameService: gameService,
 	}
 }
 
 func (gh *GameHandler) GetGames(c echo.Context) error {
 	searchQuery := c.QueryParam("search")
 
-	games, err := gh.Service.GetGames(searchQuery)
+	games, err := gh.GameService.GetGames(searchQuery)
 
 	if err != nil {
 		// DO something

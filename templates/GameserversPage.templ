@@ -3,14 +3,17 @@ package templates
 import("0xKowalski1/server-hosting-web/models")
 
 templ GameserversPage(gameservers []models.Gameserver) {
-    <div> 
-    <a href="/profile/gameservers/new" hx-get="/profile/gameservers/new" hx-target="#content" hx-swap="innerHTML" hx-push-url="true">New Gameserver</a>
+    <div class="p-8 bg-gray-100 min-h-screen">
+        <a href="/profile/gameservers/new" hx-get="/profile/gameservers/new" hx-target="#content" hx-swap="innerHTML" hx-push-url="true"
+           class="inline-block mb-4 py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
+            + New Gameserver
+        </a>
         @GameserversList(gameservers)
     </div>
 }
 
 templ GameserversList(gameservers []models.Gameserver){
-    <div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         for _, gameserver := range gameservers {
             @GameserverCard(gameserver)
         }
@@ -18,22 +21,77 @@ templ GameserversList(gameservers []models.Gameserver){
 }
 
 templ GameserverCard(gameserver models.Gameserver){
-    <div>
-        {gameserver.Name}
+    <div class="p-4 rounded-lg shadow-lg">
+        <div class="font-bold text-xl mb-2">{gameserver.Name}</div>
+        <button type="button"
+                hx-post={"/profile/gameservers/"+gameserver.ID.String()+"/deploy"}  
+                class="mt-4 py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75">
+            Deploy
+        </button>
     </div>
 }
 
-templ GameserverForm(formData models.GameserverFormData) {
-<form hx-post="/profile/gameservers" hx-target="#response" hx-swap="innerHTML" hx-boost="true" class="p-8">
-  <div class="mb-4">
-    <label for="name" class="block text-sm font-medium">Game Server Name</label>
-    <input type="text" id="name" name="name" required value={formData.Name}
-           class="mt-1 block w-full text-black px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-           placeholder="Enter gameserver name"/>
-  </div>
-  <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-    Submit
-  </button>
-  <div id="response" class="mt-4"></div>
-</form>
+
+templ GameserverForm(formData models.GameserverFormData, games []models.Game) {
+    <form hx-post="/profile/gameservers" hx-target="#response" hx-swap="innerHTML" hx-boost="true" class="p-8">
+        <div class="mb-4">
+            <label for="name" class="block mb-2 text-sm font-medium font-header">Gameserver Name</label>
+            <input type="text" id="name" name="name" required value={formData.Name}
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 text-black rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   placeholder="Enter gameserver name"/>
+        </div>
+
+        <div class="mb-4">
+            @GameDropdown(games, formData.GameID)
+        </div>
+
+        <div class="mb-4">
+            @MemorySlider()
+        </div>
+
+        <div class="mb-4">
+            @StorageSlider()
+        </div>
+
+        <button type="submit" class="font-header w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Submit
+        </button>
+        <div id="response" class="mt-4"></div>
+    </form>
 }
+
+templ GameDropdown(games []models.Game, initialGameID string){
+    <label for="game" class="block font-header mb-2 text-sm font-medium">Select Game</label>
+    <select id="game" name="game" value={initialGameID} required
+            class="mt-1 block w-full px-3 py-2 text-black border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        <option value="">Please select a game</option>
+        for _, game := range games {
+            @GameDropdownOption(game, initialGameID)
+        }
+    </select>
+}
+
+templ GameDropdownOption(game models.Game, initialGameID string){
+    if game.ID.String() == initialGameID {
+            <option value={game.ID.String()} selected>{game.Name}</option>
+    } else {
+        <option value={game.ID.String()}>{game.Name}</option>
+    }
+}
+
+templ MemorySlider() {
+    <label for="memory" class="block  font-header mb-2 text-sm font-medium">Memory (GB)</label>
+    <input type="range" id="memory" name="memory" min="1" max="16" value="1"
+           class="mt-1 block w-full cursor-pointer"
+           oninput="document.getElementById('memoryValue').textContent = this.value + ' GB';"/>
+    <span id="memoryValue" class="text-sm font-medium">1 GB</span>
+}
+
+templ StorageSlider() {
+    <label for="storage" class="block  font-header mb-2  text-sm font-medium">Storage (GB)</label>
+    <input type="range" id="storage" name="storage" min="5" step="5" max="60" value="5"
+           class="mt-1 block w-full cursor-pointer"
+           oninput="document.getElementById('storageValue').textContent = this.value + ' GB';"/>
+    <span id="storageValue" class="text-sm font-medium">5 GB</span>
+}
+

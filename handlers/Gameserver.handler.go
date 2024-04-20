@@ -4,30 +4,41 @@ import (
 	"0xKowalski1/server-hosting-web/models"
 	"0xKowalski1/server-hosting-web/services"
 	"0xKowalski1/server-hosting-web/templates"
+	"log"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 type GameserverHandler struct {
-	Service *services.GameserverService
+	GameserverService *services.GameserverService
+	GameService       *services.GameService
 }
 
-func NewGameserverHandler(db *gorm.DB) *GameserverHandler {
+func NewGameserverHandler(gameserverService *services.GameserverService, gameService *services.GameService) *GameserverHandler {
 	return &GameserverHandler{
-		Service: services.NewGameserverService(db),
+		GameserverService: gameserverService,
+		GameService:       gameService,
 	}
 }
 
 func (gh *GameserverHandler) NewGameserverForm(c echo.Context) error {
-	formData := models.GameserverFormData{
-		Name: "jeff",
+	games, err := gh.GameService.GetGames("")
+
+	if err != nil {
+		// DO something
+		return err
 	}
-	return Render(c, 200, templates.GameserverForm(formData))
+
+	formData := models.GameserverFormData{
+		Name:   "mc",
+		GameID: games[0].ID.String(),
+	}
+	return Render(c, 200, templates.GameserverForm(formData, games))
 }
 
 func (gh *GameserverHandler) GetGameservers(c echo.Context) error {
-	gameservers, err := gh.Service.GetGameservers()
+	gameservers, err := gh.GameserverService.GetGameservers()
 
 	if err != nil {
 		// Do something
@@ -37,15 +48,62 @@ func (gh *GameserverHandler) GetGameservers(c echo.Context) error {
 }
 
 func (gh *GameserverHandler) CreateGameserver(c echo.Context) error {
-	newGameserver := models.Gameserver{
-		Name: c.FormValue("name"),
+	game, err := gh.GameService.GetGameByID(c.FormValue("game"))
+	if err != nil {
+		//Do something
+		log.Printf("Error getting game by id: %v", err)
+		return err
 	}
-	_, err := gh.Service.CreateGameserver(newGameserver)
+
+	memoryLimit, err := strconv.Atoi(c.FormValue("memory"))
+	if err != nil {
+		log.Printf("Error converting memory to int: %v", err)
+		return err
+	}
+	storageLimit, err := strconv.Atoi(c.FormValue("storage"))
+	if err != nil {
+		log.Printf("Error converting storage to int: %v", err)
+		return err
+	}
+
+	newGameserver := models.Gameserver{
+		Name:         c.FormValue("name"),
+		Game:         game,
+		MemoryLimit:  memoryLimit,
+		StorageLimit: storageLimit,
+	}
+
+	_, err = gh.GameserverService.CreateGameserver(newGameserver)
 
 	if err != nil {
 		// Should send back errors for new gameserver form
+		log.Printf("Error creating new gameserver: %v", err)
 		return err
 	}
+
+	return nil
+}
+
+func (gh *GameserverHandler) DeployGameserver(c echo.Context) error {
+	// Get gameserver
+	gameserverID := c.Param("id")
+	gameserver, err := gh.GameserverService.GetGameserverByID(gameserverID)
+	if err != nil {
+		// do something
+		log.Printf("Error finding gameserver at ID - %s: %v", gameserverID, err)
+		return err
+	}
+
+	// Check if deployed
+
+	// Deploy
+	err = gh.GameserverService.DeployGameserver(gameserver)
+	if err != nil {
+		log.Printf("Error deploying gameserver at ID - %s: %v", gameserverID, err)
+		return err
+	}
+
+	// Persist deployment
 
 	return nil
 }

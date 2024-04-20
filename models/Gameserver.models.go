@@ -6,13 +6,22 @@ import (
 )
 
 type GameserverFormData struct {
-	Name string
+	Name   string
+	GameID string
 }
 
 type Gameserver struct {
 	gorm.Model
 	ID   uuid.UUID `gorm:"type:uuid;primary_key;"`
 	Name string
+
+	// Belongs to Game
+	GameID uuid.UUID
+	Game   Game
+
+	// Resource Limits
+	StorageLimit int
+	MemoryLimit  int
 }
 
 // Set unique ID

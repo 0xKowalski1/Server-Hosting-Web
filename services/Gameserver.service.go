@@ -36,7 +36,7 @@ func (service *GameserverService) CreateGameserver(newGameserver models.Gameserv
 func (service *GameserverService) GetGameservers() ([]models.Gameserver, error) {
 	var gameservers []models.Gameserver
 
-	result := service.DB.Find(&gameservers)
+	result := service.DB.Preload("Game").Find(&gameservers)
 	if result.Error != nil {
 		return nil, result.Error
 	}

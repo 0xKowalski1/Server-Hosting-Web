@@ -12,6 +12,7 @@ type Game struct {
 	Name             string
 	ShortDescription string
 	GridImage        string
+	IconImage        string
 	ContainerImage   string
 }
 

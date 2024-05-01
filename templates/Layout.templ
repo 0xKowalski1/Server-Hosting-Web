@@ -3,7 +3,6 @@ package templates
 import (
 
     "0xKowalski1/server-hosting-web/models"
-	"os"
 )
 
 templ Layout(content templ.Component, user *models.User){
@@ -19,12 +18,9 @@ templ Layout(content templ.Component, user *models.User){
 
   <link rel="icon" type="image/x-icon" href="/images/logo.jpg"/>
 
+  <script src="https://cdn.tailwindcss.com"></script>
 
-  if os.Getenv("env") == "production" {
-			<link rel="stylesheet" href="/css/tailwind.min.css" />
-		} else {
-			<link rel="stylesheet" href="/css/tailwind.css" />
-		}
+
 </head>
 <body class="bg-gray-900 text-white font-main">
 

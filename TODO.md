@@ -5,10 +5,10 @@
 #### Logo+Company Name -  ✓
 #### Home - ✓
 #### Games - ✓ 
-#### Support -
+#### Support - ✓
 #### Profile when authed - 
-#### Sign in/Getting Started when not authed -
-#### My Gameservers/Log Out button when authed - 
+#### Sign in/Getting Started when not authed - ✓
+#### My Gameservers/Log Out button when authed -  ✓
 
 ### Footer
 
@@ -22,10 +22,11 @@
 #### Where | Locations -
 
 ### Games Page -
-#### Header - 
-#### Search/Filters -
-#### List of game cards - 
-#### Dont see what you are looking for contact section - 
+#### Header - ✓ 
+#### Search/Filters - ✓ / x 
+#### List of game cards - ✓ 
+#### Dont see what you are looking for contact section - ✓
+#### Hook up links - 
 
 ### Support -
 #### Contact Form - 
@@ -33,11 +34,13 @@
 
 ### Get Started/Pricing/Checkout - 
 ## Guided
+
 ## Advanced
 
 ### Log In Page -
-#### Continue with google - 
-#### Continue with discord -
+#### Continue with google -  ✓ 
+#### Continue with discord - ✓
+#### Styling - 
 
 ## Auth Required
 
@@ -46,9 +49,24 @@
 ### Profile -
 
 ### Gameservers Management -
-#### Gameserver card - 
+#### Gameserver cards - 
+##### Gameserver static info - 
+##### Gameserver dynamic info -
+##### Start/Stop buttons -
+##### Control panel link - 
+##### Deploy/archive buttons - 
+##### Edit button - 
+
 #### New Gameserver Form - 
+##### Allow users to create gameserver - ✓
+##### Game dropdown - ✓
+##### Memory/Storage sliders - ✓
+##### Min mem/storage for game dropdown - 
+
 #### Edit Gameserver Form - 
+##### Edit Name -
+##### Edit mem/storage
+
 #### Delete Gameserver Button - 
 
 ### Gameserver control panel - 
@@ -80,7 +98,7 @@
 ### Discord OAuth - ✓
 ### Log out button -  ✓
 ### Style Auth Page -
-### Ensure auth is enforced - 
+### Ensure auth is enforced -  ✓ 
 ### Ensure email is unique -
 ### Ensure correct errors are displayed -
 ### Put cookie store secret in config - 
@@ -100,16 +118,16 @@
 ### Handle errors in games page - 
 ### Put fonts in build -
 ### Navbar is not mobile responsive -
-### First route currently results in two requests, one for layout and one for content, should only be one request for SEO - 
+### First route currently results in two requests, one for layout and one for content, should only be one request for SEO - ✓
 
 # Bugs
 
 ## Log out button not showing as red -  ✓
-## Using browser back on 404 does not return the full layout -
+## Using browser back on 404 does not return the full layout - ✓
 ## Build proccess does not correctly set env to production -
 ## Search bar 'x' is blue and hard to see -
 ## Everything shifts when you all the search results disappear (games, due to scrollbar disappearing) -
-## Tailwind was purging classes (like bg-red-700) that I was using, switched to CDN for now - 
+## Tailwind was purging classes (like bg-red-700) that I was using, switched to CDN for now -  ✓
 
 # Before Relase
 ## Cors -

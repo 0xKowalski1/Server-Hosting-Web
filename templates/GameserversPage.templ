@@ -3,7 +3,7 @@ package templates
 import("0xKowalski1/server-hosting-web/models")
 
 templ GameserversPage(gameservers []models.Gameserver) {
-    <div class="p-8 bg-gray-100 min-h-screen">
+    <div class="p-8 min-h-screen">
         <a href="/profile/gameservers/new" hx-get="/profile/gameservers/new" hx-target="#content" hx-swap="innerHTML" hx-push-url="true"
            class="inline-block mb-4 py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
             + New Gameserver
@@ -13,24 +13,74 @@ templ GameserversPage(gameservers []models.Gameserver) {
 }
 
 templ GameserversList(gameservers []models.Gameserver){
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        for _, gameserver := range gameservers {
+
+     <div class="grid grid-cols-1 gap-4 p-4">
+         for _, gameserver := range gameservers {
             @GameserverCard(gameserver)
         }
     </div>
 }
 
 templ GameserverCard(gameserver models.Gameserver){
-    <div class="p-4 rounded-lg shadow-lg">
-        <div class="font-bold text-xl mb-2">{gameserver.Name}</div>
-        <button type="button"
-                hx-post={"/profile/gameservers/"+gameserver.ID.String()+"/deploy"}  
-                class="mt-4 py-2 px-4 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75">
-            Deploy
-        </button>
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-1 gap-4 p-6" data-v0-t="card">
+    <div class="flex items-center">
+        <img
+            src="/placeholder.svg"
+            width="48"
+            height="48"
+            alt="Minecraft"
+            class="mr-4"
+            style="aspect-ratio: 48 / 48; object-fit: cover;"
+        />
+        <div>
+            <div class="flex items-center justify-between">
+                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
+                    Minecraft Server
+                </h3>
+                <div class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-green-400 text-green-900 dark:bg-green-600 dark:text-green-50">
+                    Deployed
+                </div>
+            </div>
+            <p class="text-sm text-muted-foreground">Running Minecraft 1.19.2</p>
+        </div>
     </div>
-}
+    <div class="p-6 grid grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1">
+            <span class="text-gray-500 dark:text-gray-400 text-sm">Memory</span>
+            <div class="relative w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
+                <div class="absolute h-4 bg-green-500 rounded-full" style="width: 50%;"></div>
+            </div>
+        </div>
+        <div class="flex flex-col gap-1">
+            <span class="text-gray-500 dark:text-gray-400 text-sm">Storage</span>
+            <div class="relative w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
+                <div class="absolute h-4 bg-green-500 rounded-full" style="width: 50%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="items-center p-6 flex gap-2">
+        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:text-accent-foreground h-10 px-4 py-2 bg-green-500 text-white hover:bg-green-600 dark:bg-green-600 dark:text-white dark:hover:bg-green-700">
+            Start
+        </button>
+        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:text-accent-foreground h-10 px-4 py-2 bg-red-500 text-white hover:bg-red-600 dark:bg-red-600 dark:text-white dark:hover:bg-red-700">
+            Stop
+        </button>
+        <div class="flex gap-2 ml-auto">
+            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:text-accent-foreground h-10 px-4 py-2 bg-gray-500 text-white hover:bg-gray-600 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700">
+                Archive
+            </button>
+            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:text-accent-foreground h-10 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-700">
+                Edit
+            </button>
+        </div>
+    </div>
+    <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg">
+<h4 class="text-lg font-semibold mb-2">Logs</h4>
+<pre class="overflow-auto text-xs">LOG: System started successfully...</pre>
+</div>
 
+</div>
+   }
 
 templ GameserverForm(formData models.GameserverFormData, games []models.Game) {
     <form hx-post="/profile/gameservers" hx-target="#response" hx-swap="innerHTML" hx-boost="true" class="p-8">

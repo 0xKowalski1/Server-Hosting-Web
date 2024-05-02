@@ -81,7 +81,8 @@ func (gh *GameserverHandler) CreateGameserver(c echo.Context) error {
 		return err
 	}
 
-	return nil
+	c.Response().Header().Set("HX-Replace-Url", "/profile/gameservers")
+	return gh.GetGameservers(c)
 }
 
 func (gh *GameserverHandler) DeployGameserver(c echo.Context) error {

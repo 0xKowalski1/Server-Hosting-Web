@@ -128,6 +128,8 @@
 ## Search bar 'x' is blue and hard to see -
 ## Everything shifts when you all the search results disappear (games, due to scrollbar disappearing) -
 ## Tailwind was purging classes (like bg-red-700) that I was using, switched to CDN for now -  ✓
+## Resource bar in gameserver card should handle cases greater then 100% usage - 
+
 
 # Before Relase
 ## Cors -

@@ -1,5 +1,7 @@
 package templates
 
+import "fmt"
+
 import(
     "0xKowalski1/server-hosting-web/models"
     "strconv"
@@ -29,16 +31,16 @@ templ GameserverCard(gameserver models.Gameserver){
     <!-- Header with icon, game/server name, and connection details -->
     <div class="flex flex-wrap justify-between items-center px-6 mb-4 mt-4">
         <div class="flex items-center space-x-4 flex-1">
-            <img class="w-12 h-12 rounded" src={gameserver.Game.IconImage} alt={gameserver.Game.Name + " Icon"}/>
+            <img class="w-12 h-12 rounded" src={gameserver.Game.IconImage} alt={fmt.Sprintf(`%s Icon`,gameserver.Game.Name)}/>
             <div>
                 <div class="font-header font-bold text-xl text-white">{gameserver.Name}</div>
                 <p class="text-gray-300">{gameserver.Game.Name}</p>
             </div>
         </div>
-        <div class="text-center text-sm text-gray-300">
-            <p>Connection Details</p>
-            <p class="text-lg text-white">192.168.1.1:25565</p>
-            <p>Players: 0/50</p>
+        <div class="text-center text-m text-gray-300">
+            <p class="flex flex-row justify-between"><span class="font-bold">Status</span><span>Running</span></p>
+            <p  class="flex flex-row justify-between"><span class="font-bold pr-4">Connect</span><span onclick="copyToClipboard(this)" class="cursor-pointer hover:text-blue-500">192.168.1.1:25565</span></p>
+            <p  class="flex flex-row justify-between"><span class="font-bold">Players</span><span>0/50</span></p>
         </div>
     </div>
 

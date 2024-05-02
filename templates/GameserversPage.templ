@@ -25,69 +25,50 @@ templ GameserversList(gameservers []models.Gameserver){
 }
 
 templ GameserverCard(gameserver models.Gameserver){
-    <div class="rounded-lg border bg-card text-card-foreground shadow-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-1 gap-4 p-6" data-v0-t="card">
-    <div class="flex items-center">
-        <img
-            src={gameserver.Game.IconImage}
-            width="48"
-            height="48"
-            alt={gameserver.Game.Name}
-            class="mr-4"
-            style="aspect-ratio: 48 / 48; object-fit: cover;"
-        />
-        <div>
-            <div class="flex items-center justify-between">
-                <h3 class="whitespace-nowrap text-2xl font-semibold leading-none tracking-tight">
-                    {gameserver.Name}
-                </h3>
-                <div class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-green-400 text-green-900 dark:bg-green-600 dark:text-green-50">
-                    Deployed
-                </div>
+    <div class="w-full max-w-screen-2xl mx-auto rounded overflow-hidden shadow-lg bg-gray-800 mt-4 mb-4">
+    <!-- Header with icon, game/server name, and connection details -->
+    <div class="flex flex-wrap justify-between items-center px-6 mb-4 mt-4">
+        <div class="flex items-center space-x-4 flex-1">
+            <img class="w-12 h-12 rounded" src={gameserver.Game.IconImage} alt={gameserver.Game.Name + " Icon"}/>
+            <div>
+                <div class="font-header font-bold text-xl text-white">{gameserver.Name}</div>
+                <p class="text-gray-300">{gameserver.Game.Name}</p>
             </div>
-            <p class="text-sm text-muted-foreground">{gameserver.Game.Name} Server</p>
+        </div>
+        <div class="text-center text-sm text-gray-300">
+            <p>Connection Details</p>
+            <p class="text-lg text-white">192.168.1.1:25565</p>
+            <p>Players: 0/50</p>
         </div>
     </div>
-<div class="p-6 grid grid-cols-2 gap-4">
-    <div class="flex flex-col gap-1">
-        <span class="text-gray-500 dark:text-gray-400 text-sm">Memory</span>
-        <div class="relative w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
-            <div class="absolute h-4 bg-green-500 rounded-full" style="width: 25%;"></div>
-            <span class="absolute right-0 top-0 mt-5 mr-2 text-xs text-gray-700 dark:text-gray-300">0/{strconv.Itoa(gameserver.MemoryLimit)} GB</span>
+
+    <!-- Resource usage indicators -->
+    <div class="px-6 mb-6">
+        <p class="text-gray-400 text-sm">Memory: 0/{strconv.Itoa(gameserver.MemoryLimit)} GB</p>
+        <div class="w-full bg-gray-700 rounded-full h-2.5">
+            <div class="bg-green-600 h-2.5 rounded" style="width: 70%"></div>
+        </div>
+        <p class="text-gray-400 text-sm mt-3">Storage:  0/{strconv.Itoa(gameserver.StorageLimit)} GB</p>
+        <div class="w-full bg-gray-700 rounded-full h-2.5">
+            <div class="bg-blue-600 h-2.5 rounded" style="width: 55%"></div>
         </div>
     </div>
-    <div class="flex flex-col gap-1">
-        <span class="text-gray-500 dark:text-gray-400 text-sm">Storage</span>
-        <div class="relative w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
-            <div class="absolute h-4 bg-green-500 rounded-full" style="width: 60%;"></div>
-            <span class="absolute right-0 top-0 mt-5 mr-2 text-xs text-gray-700 dark:text-gray-300">0/{strconv.Itoa(gameserver.StorageLimit)} GB</span>
+
+    <!-- Action Buttons -->
+    <div class="px-6 pb-4 flex justify-between items-center flex-wrap">
+        <div class="flex space-x-2 mb-2 w-full justify-between md:justify-start md:w-auto">
+            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Start</button>
+            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Stop</button>
+            <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Restart</button>
+        </div>
+        <div class="flex space-x-2 mb-2 w-full justify-between md:justify-start md:w-auto">
+            <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Archive</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
+            <button class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Control Panel</button>
         </div>
     </div>
 </div>
-
-
-        <div class="items-center p-6 flex gap-2">
-        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:text-accent-foreground h-10 px-4 py-2 bg-green-500 text-white hover:bg-green-600 dark:bg-green-600 dark:text-white dark:hover:bg-green-700">
-            Start
-        </button>
-        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:text-accent-foreground h-10 px-4 py-2 bg-red-500 text-white hover:bg-red-600 dark:bg-red-600 dark:text-white dark:hover:bg-red-700">
-            Stop
-        </button>
-        <div class="flex gap-2 ml-auto">
-            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:text-accent-foreground h-10 px-4 py-2 bg-gray-500 text-white hover:bg-gray-600 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700">
-                Archive
-            </button>
-            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input hover:text-accent-foreground h-10 px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:text-white dark:hover:bg-blue-700">
-                Edit
-            </button>
-        </div>
-    </div>
-    <div class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg">
-<h4 class="text-lg font-semibold mb-2">Logs</h4>
-<pre class="overflow-auto text-xs">LOG: System started successfully...</pre>
-</div>
-
-</div>
-   }
+}
 
 templ GameserverForm(formData models.GameserverFormData, games []models.Game) {
     <form hx-post="/profile/gameservers" hx-target="#response" hx-swap="innerHTML" hx-boost="true" class="p-8">

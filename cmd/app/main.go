@@ -32,6 +32,7 @@ func main() {
 	HomeHandler := handlers.NewHomeHandler()
 	GameHandler := handlers.NewGameHandler(GameService)
 	SupportHandler := handlers.NewSupportHandler()
+	StoreHandler := handlers.NewStoreHandler()
 	AuthHandler := handlers.NewAuthHandler(AuthService, UserService)
 	GameserverHandler := handlers.NewGameserverHandler(GameserverService, GameService)
 
@@ -54,6 +55,12 @@ func main() {
 
 	// Support
 	e.GET("/support", SupportHandler.GetSupport)
+
+	// Store
+	e.GET("/store", StoreHandler.GetStore)
+	e.GET("/store/guided", StoreHandler.GetGuidedStoreFlow)
+	e.GET("/store/advanced", StoreHandler.GetAdvancedStoreFlow)
+	e.GET("/store/checkout", StoreHandler.GetCheckout)
 
 	/// Profile
 	e.GET("/profile/gameservers", GameserverHandler.GetGameservers, AuthService.RequireAuth)

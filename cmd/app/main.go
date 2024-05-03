@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
-	//	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo/v4/middleware"
 
 	"0xKowalski1/server-hosting-web/config"
 	"0xKowalski1/server-hosting-web/db"
@@ -31,11 +31,12 @@ func main() {
 	// Handlers
 	HomeHandler := handlers.NewHomeHandler()
 	GameHandler := handlers.NewGameHandler(GameService)
+	SupportHandler := handlers.NewSupportHandler()
 	AuthHandler := handlers.NewAuthHandler(AuthService, UserService)
 	GameserverHandler := handlers.NewGameserverHandler(GameserverService, GameService)
 
 	// Middleware
-	//e.Use(middleware.Logger())
+	e.Use(middleware.Logger())
 	e.Use(AttachUserToContext(AuthService, UserService))
 
 	// Routes
@@ -50,6 +51,9 @@ func main() {
 	e.GET("/logout", AuthHandler.PostLogout)
 	e.GET("/auth/:provider", AuthHandler.BeginAuth)
 	e.GET("/auth/:provider/callback", AuthHandler.AuthCallback)
+
+	// Support
+	e.GET("/support", SupportHandler.GetSupport)
 
 	/// Profile
 	e.GET("/profile/gameservers", GameserverHandler.GetGameservers, AuthService.RequireAuth)

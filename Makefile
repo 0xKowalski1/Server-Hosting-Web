@@ -18,8 +18,8 @@ templ-watch:
 .PHONY: dev
 dev:
 	go run ./cmd/seed/seed.go
-	make tailwind-watch &
 	make templ-watch &
+	make tailwind-watch &	
 	go build -o ./tmp/app ./cmd/app/main.go && air
 
 .PHONY: build

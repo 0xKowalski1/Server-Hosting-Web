@@ -1,0 +1,63 @@
+package templates
+
+templ SupportPage() {
+  <div class="p-8 max-w-7xl mx-auto">
+        <!-- Contact Us Form -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-bold mb-4">Contact Us</h2>
+            <form action="/support" method="post" hx-post="/support" hx-target="#form-response" hx-swap="outerHTML">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2" for="name">Name:</label>
+                    <input type="text" id="name" name="name" class="bg-gray-700 focus:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600 w-full p-2 rounded" placeholder="Your Name"/>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2" for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="bg-gray-700 focus:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600 w-full p-2 rounded" placeholder="Your Email" />
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2" for="message">Message:</label>
+                    <textarea id="message" name="message" class="bg-gray-700 focus:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-600 w-full p-2 rounded" placeholder="Your Message"></textarea>
+                </div>
+                <button type="submit" class="bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-offset-2 text-white px-4 py-2 rounded">Send Message</button>
+                <div id="form-response"></div>
+            </form>
+        </div>
+
+        <!-- FAQ -->
+        <div class="mt-12 bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-bold mb-4">Frequently Asked Questions</h2>
+   <ul class="divide-y divide-gray-700">
+    <li class="py-4">
+        <h3 class="font-semibold">How do I reset my server?</h3>
+        <button onclick="toggleAnswer(this, this.nextElementSibling)" class="text-purple-400 hover:text-purple-300 focus:outline-none">Click here to reveal the answer</button>
+        <div class="hidden">
+            <p>You can reset your server from the server control panel or contact support for assistance.</p>
+        </div>
+    </li>
+    <li class="py-4">
+        <h3 class="font-semibold">What payment methods are accepted?</h3>
+        <button onclick="toggleAnswer(this, this.nextElementSibling)" class="text-purple-400 hover:text-purple-300 focus:outline-none">Click here to reveal the answer</button>
+        <div class="hidden">
+            <p>We accept various payment methods, including credit cards and PayPal.</p>
+        </div>
+    </li>
+    <li class="py-4">
+        <h3 class="font-semibold">Can I upgrade my plan at any time?</h3>
+        <button onclick="toggleAnswer(this, this.nextElementSibling)" class="text-purple-400 hover:text-purple-300 focus:outline-none">Click here to reveal the answer</button>
+        <div class="hidden">
+            <p>Yes, you can upgrade your plan at any time through your account dashboard.</p>
+        </div>
+    </li>
+</ul>
+
+            <script>
+            function toggleAnswer(button, answer) {
+                const isVisible = !answer.classList.contains('hidden');
+                answer.classList.toggle('hidden');
+                button.textContent = isVisible ? "Click here to reveal the answer" : "Click here to hide the answer";
+            }
+            </script>
+
+        </div>
+    </div>
+}

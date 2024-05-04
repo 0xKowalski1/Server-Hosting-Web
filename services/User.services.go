@@ -22,6 +22,13 @@ func (service *UserService) FindOrCreateUser(unknownUser models.User) (models.Us
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
 			// User not found, create new user
+
+			// Set currency to USD by default, REMOVE ME, this should be handled elsewhere
+			var usd = models.Currency{}
+			service.DB.First(&usd, "code = ?", "USD")
+
+			unknownUser.CurrencyID = usd.ID
+
 			return service.CreateUser(unknownUser)
 		}
 		// Some other error occurred

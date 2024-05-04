@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	//"github.com/labstack/echo/v4/middleware"
 
 	"0xKowalski1/server-hosting-web/config"
 	"0xKowalski1/server-hosting-web/db"
@@ -27,17 +27,19 @@ func main() {
 	UserService := services.NewUserService(database)
 	GameserverService := services.NewGameserverService(database)
 	GameService := services.NewGameService(database)
+	CurrencyService := services.NewCurrencyService(database)
+	PriceService := services.NewPriceService(database)
 
 	// Handlers
 	HomeHandler := handlers.NewHomeHandler()
 	GameHandler := handlers.NewGameHandler(GameService)
 	SupportHandler := handlers.NewSupportHandler()
-	StoreHandler := handlers.NewStoreHandler()
+	StoreHandler := handlers.NewStoreHandler(CurrencyService, PriceService)
 	AuthHandler := handlers.NewAuthHandler(AuthService, UserService)
 	GameserverHandler := handlers.NewGameserverHandler(GameserverService, GameService)
 
 	// Middleware
-	e.Use(middleware.Logger())
+	//e.Use(middleware.Logger())
 	e.Use(AttachUserToContext(AuthService, UserService))
 
 	// Routes

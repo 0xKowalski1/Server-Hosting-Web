@@ -31,4 +31,20 @@ func main() {
 	db.Migrator().DropTable(&models.Gameserver{})
 	db.AutoMigrate(&models.Gameserver{})
 
+	// Seed Currency
+	db.Migrator().DropTable(&models.Currency{})
+	db.AutoMigrate(&models.Currency{})
+	currencies := seeds.SeedCurrency()
+	for _, currency := range currencies {
+		db.Create(&currency)
+	}
+
+	// Seed Prices
+	db.Migrator().DropTable(&models.Price{})
+	db.AutoMigrate(&models.Price{})
+	prices := seeds.SeedPrice(currencies)
+	for _, price := range prices {
+		db.Create(&price)
+	}
+
 }

@@ -26,25 +26,28 @@
 #### Search/Filters - ✓ / x 
 #### List of game cards - ✓ 
 #### Dont see what you are looking for contact section - ✓
-#### Hook up links - 
+#### Hook up links - ✓
 
-### Support -
-#### Contact Form - 
-#### FAQ -
+### Support - ✓
+#### Contact Form - ✓
+#### FAQ - ✓ 
 
-### Get Started/Pricing/Checkout - 
-## Guided
 
-## Advanced
+### Store -
+#### Prices -
 
-### Log In Page -
+#### Guided -
+
+#### Advanced -
+
+#### Checkout -
+
+### Log In Page - ✓
 #### Continue with google -  ✓ 
 #### Continue with discord - ✓
-#### Styling - 
+#### Styling -  ✓
 
 ## Auth Required
-
-### Payment form - 
 
 ### Profile -
 
@@ -119,6 +122,7 @@
 ### Put fonts in build -
 ### Navbar is not mobile responsive -
 ### First route currently results in two requests, one for layout and one for content, should only be one request for SEO - ✓
+### Set default currency based on location - 
 
 # Bugs
 

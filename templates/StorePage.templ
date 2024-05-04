@@ -1,17 +1,19 @@
 package templates
 
-templ StorePage() {
+import "0xKowalski1/server-hosting-web/models"
+
+templ StorePage(memoryPrice models.Price, storagePrice models.Price, archivePrice models.Price) {
     <div class="p-8 max-w-7xl mx-auto">
         <div  class="p-6 bg-gray-800 rounded-lg shadow-lg">
             <h2 class="font-header">Store</h2>            
             <div id="store-content"> 
-                @AdvancedStoreFlow()
+                @AdvancedStoreFlow(memoryPrice, storagePrice, archivePrice)
             </div>
         </div>
     </div>
 }
 
-templ AdvancedStoreFlow(){
+templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, archivePrice models.Price){
     <form class="space-y-4  p-8">
     <p>Don't know what you want? <a class="underline text-blue-400" href="/store/guided" hx-get="/store/guided" hx-target="#store-content" hx-swap="innerHTML" hx-push-url="/store/guided">Try our Guided store flow.</a></p>
 

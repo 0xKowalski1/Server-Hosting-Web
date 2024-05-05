@@ -9,7 +9,7 @@ type Price struct {
 	gorm.Model
 	ID           uuid.UUID `gorm:"type:uuid;primary_key;"`
 	Type         string    // "Memory", "Storage", "Archive"
-	PricePerUnit float32
+	PricePerUnit int
 
 	CurrencyID uuid.UUID
 	Currency   Currency

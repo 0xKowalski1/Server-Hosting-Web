@@ -1,12 +1,16 @@
 package templates
 
-import "0xKowalski1/server-hosting-web/models"
+import (
+    "0xKowalski1/server-hosting-web/models"
+	"strconv"
+)
 
 templ StorePage(memoryPrice models.Price, storagePrice models.Price, archivePrice models.Price) {
     <div class="p-8 max-w-7xl mx-auto">
         <div  class="p-6 bg-gray-800 rounded-lg shadow-lg">
             <h2 class="font-header">Store</h2>            
-            <div id="store-content"> 
+            <div id="store-content">
+                {memoryPrice.Type}
                 @AdvancedStoreFlow(memoryPrice, storagePrice, archivePrice)
             </div>
         </div>
@@ -20,7 +24,10 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
     <div>
         <label for="memory-input" class="block text-sm font-medium text-gray-300">Memory (GB)</label>
         <div class="flex items-center space-x-4">
-            <input id="memory-input" type="range" value="1" min="1" max="64" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" oninput="updateMemoryPrice(this.value)" />
+            <input id="memory-input" type="range" value="1" min="1" max="64" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            data-price-per-unit={strconv.Itoa(memoryPrice.PricePerUnit)}
+            data-price-type={memoryPrice.Type}
+            oninput="updatePrice(this)"   />
             <span id="memory-value" class="text-white font-bold">1GB</span>
             <span id="memory-price" class="text-green-400">$4</span>
         </div>
@@ -29,7 +36,11 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
     <div>
         <label for="storage-input" class="block text-sm font-medium text-gray-300">Storage Space (GB)</label>
         <div class="flex items-center space-x-4">
-            <input id="storage-input" type="range" value="5" min="5" max="100" step="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" oninput="updateStoragePrice(this.value)" />
+            <input id="storage-input" type="range" value="5" min="5" max="100" step="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            data-price-per-unit={strconv.Itoa(storagePrice.PricePerUnit)}
+            data-price-type={storagePrice.Type}
+            oninput="updatePrice(this)"
+            />
             <span id="storage-value" class="text-white font-bold">5GB</span>
             <span id="storage-price" class="text-green-400">$5</span>
         </div>
@@ -38,7 +49,11 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
     <div>
         <label for="archive-input" class="block text-sm font-medium text-gray-300">Archive Space (GB)</label>
         <div class="flex items-center space-x-4">
-            <input id="archive-input" type="range" value="10" min="10" max="200" step="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" oninput="updateArchivePrice(this.value)" />
+            <input id="archive-input" type="range" value="10" min="10" max="200" step="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" 
+            data-price-per-unit={strconv.Itoa(archivePrice.PricePerUnit)}
+            data-price-type={archivePrice.Type}
+            oninput="updatePrice(this)"
+            />
             <span id="archive-value" class="text-white font-bold">10GB</span>
             <span id="archive-price" class="text-green-400">$1</span>
         </div>
@@ -53,36 +68,21 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
 </form>
 
 <script>
-    function updateMemoryPrice(value) {
-        const pricePerGB = 4; // Price per GB for memory
-        const totalPrice = value * pricePerGB;
-        document.getElementById('memory-value').textContent = value + 'GB';
-        document.getElementById('memory-price').textContent = '$' + totalPrice;
-        updateTotalCost();
-    }
-
-    function updateStoragePrice(value) {
-        const pricePerGB = 1; // Price per GB for storage
-        const totalPrice = value * pricePerGB;
-        document.getElementById('storage-value').textContent = value + 'GB';
-        document.getElementById('storage-price').textContent = '$' + totalPrice;
-        updateTotalCost();
-    }
-
-    function updateArchivePrice(value) {
-        const pricePerGB = 0.1; // Price per GB for archive space
-        const totalPrice = value * pricePerGB;
-        document.getElementById('archive-value').textContent = value + 'GB';
-        document.getElementById('archive-price').textContent = '$' + totalPrice;
+    function updatePrice(e) {
+        // Price is in pence
+        pricePerUnit = parseFloat(e.dataset.pricePerUnit)/100;
+        const totalPrice = e.value * pricePerUnit;
+        document.getElementById(`${e.dataset.priceType}-value`).textContent = e.value + 'GB';
+        document.getElementById(`${e.dataset.priceType}-price`).textContent = '$' + totalPrice.toFixed(2);
         updateTotalCost();
     }
 
     function updateTotalCost() {
-        const memoryPrice = parseInt(document.getElementById('memory-price').textContent.replace('$', ''));
-        const storagePrice = parseInt(document.getElementById('storage-price').textContent.replace('$', ''));
-        const archivePrice = parseInt(document.getElementById('archive-price').textContent.replace('$', ''));
+        const memoryPrice = parseFloat(document.getElementById('memory-price').textContent.replace('$', ''));
+        const storagePrice = parseFloat(document.getElementById('storage-price').textContent.replace('$', ''));
+        const archivePrice = parseFloat(document.getElementById('archive-price').textContent.replace('$', ''));
         const totalCost = memoryPrice + storagePrice + archivePrice;
-        document.getElementById('total-cost').textContent = '$' + totalCost;
+        document.getElementById('total-cost').textContent = '$' + totalCost.toFixed(2);
     }
 </script>
 }

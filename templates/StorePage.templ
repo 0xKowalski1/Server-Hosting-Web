@@ -10,7 +10,6 @@ templ StorePage(memoryPrice models.Price, storagePrice models.Price, archivePric
         <div  class="p-6 bg-gray-800 rounded-lg shadow-lg">
             <h2 class="font-header">Store</h2>            
             <div id="store-content">
-                {memoryPrice.Type}
                 @AdvancedStoreFlow(memoryPrice, storagePrice, archivePrice)
             </div>
         </div>
@@ -29,7 +28,7 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
             data-price-type={memoryPrice.Type}
             oninput="updatePrice(this)"   />
             <span id="memory-value" class="text-white font-bold">1GB</span>
-            <span id="memory-price" class="text-green-400">$4</span>
+            <span id="memory-price" class="text-green-400">${strconv.FormatFloat(1 * float64(memoryPrice.PricePerUnit) / 100, 'f', 2, 64) }</span>
         </div>
     </div>
 
@@ -42,7 +41,7 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
             oninput="updatePrice(this)"
             />
             <span id="storage-value" class="text-white font-bold">5GB</span>
-            <span id="storage-price" class="text-green-400">$5</span>
+            <span id="storage-price" class="text-green-400">${strconv.FormatFloat(5 * float64(storagePrice.PricePerUnit) / 100, 'f', 2, 64) }</span>
         </div>
     </div>
 
@@ -55,14 +54,14 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
             oninput="updatePrice(this)"
             />
             <span id="archive-value" class="text-white font-bold">10GB</span>
-            <span id="archive-price" class="text-green-400">$1</span>
+            <span id="archive-price" class="text-green-400">${strconv.FormatFloat(10 * float64(archivePrice.PricePerUnit) / 100, 'f', 2, 64) }</span>
         </div>
     </div>
 
     <div class="text-right">
         <span class="text-lg font-medium text-gray-300">Total Cost: </span>
-        <span id="total-cost" class="text-lg font-bold text-green-500">$10</span>
-    </div>
+        <span id="total-cost" class="text-lg font-bold text-green-500">$ {strconv.FormatFloat((1 * float64(memoryPrice.PricePerUnit) / 100) + (5 * float64(storagePrice.PricePerUnit) / 100) + (10 * float64(archivePrice.PricePerUnit) / 100) , 'f', 2, 64)}</span>
+        </div>
 
     <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">Checkout</button>
 </form>

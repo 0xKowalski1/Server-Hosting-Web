@@ -4,7 +4,6 @@ import (
 	"0xKowalski1/server-hosting-web/models"
 	"0xKowalski1/server-hosting-web/services"
 	"0xKowalski1/server-hosting-web/templates"
-	"log"
 
 	"github.com/labstack/echo/v4"
 )
@@ -26,8 +25,6 @@ func (sh *StoreHandler) GetStore(c echo.Context) error {
 	if err != nil {
 		//500
 	}
-
-	log.Println(priceMap["memory"].Type)
 
 	return Render(c, 200, templates.StorePage(priceMap["memory"], priceMap["storage"], priceMap["archive"]))
 }

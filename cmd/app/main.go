@@ -5,7 +5,8 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
-	//"github.com/labstack/echo/v4/middleware"
+
+	"github.com/labstack/echo/v4/middleware"
 
 	"0xKowalski1/server-hosting-web/config"
 	"0xKowalski1/server-hosting-web/db"
@@ -41,6 +42,13 @@ func main() {
 	// Middleware
 	//e.Use(middleware.Logger())
 	e.Use(AttachUserToContext(AuthService, UserService))
+
+	// Configure CORS
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
 
 	// Routes
 	/// Home

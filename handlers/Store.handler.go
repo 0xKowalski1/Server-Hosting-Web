@@ -1,13 +1,18 @@
 package handlers
 
 import (
+	"0xKowalski1/server-hosting-web/config"
 	"0xKowalski1/server-hosting-web/models"
 	"0xKowalski1/server-hosting-web/services"
 	"0xKowalski1/server-hosting-web/templates"
+
 	"log"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
+
+	"github.com/stripe/stripe-go/v78"
+	"github.com/stripe/stripe-go/v78/checkout/session"
 )
 
 type StoreHandler struct {
@@ -36,21 +41,50 @@ func (sh *StoreHandler) SubmitStoreForm(c echo.Context) error {
 	storage, stoErr := strconv.Atoi(c.FormValue("storage"))
 	archive, arcErr := strconv.Atoi(c.FormValue("archive"))
 
-	log.Println(memory)
+	prices, err := sh.getPrices(c)
+	if err != nil {
+		//500
+	}
 
 	// Validate
 	if memErr != nil || stoErr != nil || arcErr != nil {
 		// 400
 	}
 
-	formData := map[string]int{
-		"memory":  memory,
-		"storage": storage,
-		"archive": archive,
+	// Init Stripe
+	log.Println(config.Envs.StripeSecretKey)
+	stripe.Key = config.Envs.StripeSecretKey
+
+	domain := "http://localhost:3000"
+	params := &stripe.CheckoutSessionParams{
+		LineItems: []*stripe.CheckoutSessionLineItemParams{
+			{
+				Price:    stripe.String(prices["memory"].StripeID),
+				Quantity: stripe.Int64(int64(memory)),
+			},
+			{
+				Price:    stripe.String(prices["storage"].StripeID),
+				Quantity: stripe.Int64(int64(storage)),
+			},
+			{
+				Price:    stripe.String(prices["archive"].StripeID),
+				Quantity: stripe.Int64(int64(archive)),
+			},
+		},
+		Mode:       stripe.String(string(stripe.CheckoutSessionModeSubscription)),
+		SuccessURL: stripe.String(domain + "/profile/gameservers"),
+		CancelURL:  stripe.String(domain + "/store"),
 	}
 
-	c.Response().Header().Set("HX-Replace-Url", "/store/checkout")
-	return Render(c, 200, templates.Checkout(formData))
+	stripeCheckoutSession, err := session.New(params)
+
+	if err != nil {
+		log.Printf("session.New: %v", err)
+		// render error
+	}
+
+	c.Response().Header().Set("HX-Redirect", stripeCheckoutSession.URL)
+	return c.NoContent(302)
 }
 
 func (sh *StoreHandler) GetGuidedStoreFlow(c echo.Context) error {

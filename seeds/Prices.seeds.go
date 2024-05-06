@@ -13,16 +13,19 @@ func SeedPrice(currencies []*models.Currency) []models.Price {
 		Type:         "memory",
 		PricePerUnit: 500,
 		CurrencyID:   currencyMap["USD"].ID,
+		StripeID:     "price_1NpdWeAgE84zSyWHqkZokTfL",
 	}
 	storageUSD := models.Price{
 		Type:         "storage",
-		PricePerUnit: 150,
+		PricePerUnit: 50,
 		CurrencyID:   currencyMap["USD"].ID,
+		StripeID:     "price_1NpdWeAgE84zSyWH6DYtNKO8",
 	}
 	archiveUSD := models.Price{
 		Type:         "archive",
-		PricePerUnit: 20,
+		PricePerUnit: 10,
 		CurrencyID:   currencyMap["USD"].ID,
+		StripeID:     "price_1NpdWeAgE84zSyWHYuSFvMCl",
 	}
 
 	seeds = append(seeds, memoryUSD)
@@ -33,16 +36,19 @@ func SeedPrice(currencies []*models.Currency) []models.Price {
 		Type:         "memory",
 		PricePerUnit: 400,
 		CurrencyID:   currencyMap["GBP"].ID,
+		StripeID:     "price_1NpdWeAgE84zSyWHsdqrb5Sv",
 	}
 	storageGBP := models.Price{
 		Type:         "storage",
-		PricePerUnit: 100,
+		PricePerUnit: 40,
 		CurrencyID:   currencyMap["GBP"].ID,
+		StripeID:     "price_1NpdWeAgE84zSyWHNNtxebnm",
 	}
 	archiveGBP := models.Price{
 		Type:         "archive",
-		PricePerUnit: 10,
+		PricePerUnit: 8,
 		CurrencyID:   currencyMap["GBP"].ID,
+		StripeID:     "price_1NpdWeAgE84zSyWHAWzr6PWG",
 	}
 
 	seeds = append(seeds, memoryGBP)

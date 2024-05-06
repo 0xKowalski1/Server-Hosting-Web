@@ -22,6 +22,10 @@ type Config struct {
 	// Discord
 	DiscordClientID     string
 	DiscordClientSecret string
+
+	// Stripe
+	StripePublicKey string
+	StripeSecretKey string
 }
 
 var Envs = initConfig()
@@ -44,6 +48,10 @@ func initConfig() Config {
 		// Discord
 		DiscordClientID:     getEnv("DISCORD_CLIENT_ID"),
 		DiscordClientSecret: getEnv("DISCORD_CLIENT_SECRET"),
+
+		//Stripe
+		StripePublicKey: getEnv("STRIPE_PUBLIC_KEY"),
+		StripeSecretKey: getEnv("STRIPE_SECRET_KEY"),
 	}
 }
 

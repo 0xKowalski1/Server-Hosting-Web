@@ -35,7 +35,7 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
     <div>
         <label for="storage-input" class="block text-sm font-medium text-gray-300">Storage Space (GB)</label>
         <div class="flex items-center space-x-4">
-            <input id="storage-input" type="range" value="5" min="5" max="100" step="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            <input id="storage-input" name="storage" type="range" value="5" min="5" max="100" step="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
             data-price-per-unit={strconv.Itoa(storagePrice.PricePerUnit)}
             data-price-type={storagePrice.Type}
             oninput="updatePrice(this)"
@@ -48,7 +48,7 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
     <div>
         <label for="archive-input" class="block text-sm font-medium text-gray-300">Archive Space (GB)</label>
         <div class="flex items-center space-x-4">
-            <input id="archive-input" type="range" value="10" min="10" max="200" step="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" 
+            <input id="archive-input" name="archive" type="range" value="10" min="10" max="200" step="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" 
             data-price-per-unit={strconv.Itoa(archivePrice.PricePerUnit)}
             data-price-type={archivePrice.Type}
             oninput="updatePrice(this)"
@@ -66,6 +66,7 @@ templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, arc
     <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">Checkout</button>
 </form>
 
+ <script src="https://js.stripe.com/v3/"></script>
 <script>
     function updatePrice(e) {
         // Price is in pence
@@ -95,8 +96,14 @@ templ GuidedStoreFlow(){
 
 
 templ Checkout(formData map[string]int){
-    <div>
-        {strconv.Itoa(formData["memory"])}
+    <div id="checkout-page" >
+
+        <div id="checkout">
+        </div>
+
+
+
+
     </div>
 }
 

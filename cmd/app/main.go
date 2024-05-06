@@ -60,9 +60,9 @@ func main() {
 
 	// Store
 	e.GET("/store", StoreHandler.GetStore)
+	e.POST("/store", StoreHandler.SubmitStoreForm)
 	e.GET("/store/guided", StoreHandler.GetGuidedStoreFlow)
 	e.GET("/store/advanced", StoreHandler.GetAdvancedStoreFlow)
-	e.GET("/store/checkout", StoreHandler.GetCheckout)
 
 	/// Profile
 	e.GET("/profile/gameservers", GameserverHandler.GetGameservers, AuthService.RequireAuth)

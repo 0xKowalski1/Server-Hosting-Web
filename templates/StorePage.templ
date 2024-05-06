@@ -17,13 +17,13 @@ templ StorePage(memoryPrice models.Price, storagePrice models.Price, archivePric
 }
 
 templ AdvancedStoreFlow(memoryPrice models.Price, storagePrice models.Price, archivePrice models.Price){
-    <form class="space-y-4  p-8">
+    <form class="space-y-4  p-8" hx-post="/store" hx-target="#store-content" hx-swap="innerHTML">
     <p>Don't know what you want? <a class="underline text-blue-400" href="/store/guided" hx-get="/store/guided" hx-target="#store-content" hx-swap="innerHTML" hx-push-url="/store/guided">Try our Guided store flow.</a></p>
 
     <div>
         <label for="memory-input" class="block text-sm font-medium text-gray-300">Memory (GB)</label>
         <div class="flex items-center space-x-4">
-            <input id="memory-input" type="range" value="1" min="1" max="64" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            <input id="memory-input" name="memory" type="range" value="1" min="1" max="16" step="1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
             data-price-per-unit={strconv.Itoa(memoryPrice.PricePerUnit)}
             data-price-type={memoryPrice.Type}
             oninput="updatePrice(this)"   />
@@ -94,9 +94,9 @@ templ GuidedStoreFlow(){
 }
 
 
-templ Checkout(){
+templ Checkout(formData map[string]int){
     <div>
-
+        {strconv.Itoa(formData["memory"])}
     </div>
 }
 

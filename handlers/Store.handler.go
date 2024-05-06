@@ -4,6 +4,8 @@ import (
 	"0xKowalski1/server-hosting-web/models"
 	"0xKowalski1/server-hosting-web/services"
 	"0xKowalski1/server-hosting-web/templates"
+	"log"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -29,6 +31,28 @@ func (sh *StoreHandler) GetStore(c echo.Context) error {
 	return Render(c, 200, templates.StorePage(priceMap["memory"], priceMap["storage"], priceMap["archive"]))
 }
 
+func (sh *StoreHandler) SubmitStoreForm(c echo.Context) error {
+	memory, memErr := strconv.Atoi(c.FormValue("memory"))
+	storage, stoErr := strconv.Atoi(c.FormValue("storage"))
+	archive, arcErr := strconv.Atoi(c.FormValue("archive"))
+
+	log.Println(memory)
+
+	// Validate
+	if memErr != nil || stoErr != nil || arcErr != nil {
+		// 400
+	}
+
+	formData := map[string]int{
+		"memory":  memory,
+		"storage": storage,
+		"archive": archive,
+	}
+
+	c.Response().Header().Set("HX-Replace-Url", "/store/checkout")
+	return Render(c, 200, templates.Checkout(formData))
+}
+
 func (sh *StoreHandler) GetGuidedStoreFlow(c echo.Context) error {
 	return Render(c, 200, templates.GuidedStoreFlow())
 }
@@ -40,10 +64,6 @@ func (sh *StoreHandler) GetAdvancedStoreFlow(c echo.Context) error {
 	}
 
 	return Render(c, 200, templates.AdvancedStoreFlow(priceMap["memory"], priceMap["storage"], priceMap["archive"]))
-}
-
-func (sh *StoreHandler) GetCheckout(c echo.Context) error {
-	return Render(c, 200, templates.Checkout())
 }
 
 func (sh *StoreHandler) getPrices(c echo.Context) (map[string]models.Price, error) {

@@ -123,6 +123,7 @@
 ### Navbar is not mobile responsive -
 ### First route currently results in two requests, one for layout and one for content, should only be one request for SEO - ✓
 ### Set default currency based on location - 
+### Support changing prices - 
 
 # Bugs
 

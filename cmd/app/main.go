@@ -30,7 +30,7 @@ func main() {
 	GameService := services.NewGameService(database)
 	CurrencyService := services.NewCurrencyService(database)
 	PriceService := services.NewPriceService(database)
-	StripeService := services.NewStripeService()
+	StripeService := services.NewStripeService(database)
 
 	// Handlers
 	HomeHandler := handlers.NewHomeHandler()
@@ -72,6 +72,7 @@ func main() {
 	e.POST("/store", StoreHandler.SubmitStoreForm)
 	e.GET("/store/guided", StoreHandler.GetGuidedStoreFlow)
 	e.GET("/store/advanced", StoreHandler.GetAdvancedStoreFlow)
+	e.GET("/store/callback", StoreHandler.StripeSuccessCallback)
 
 	/// Profile
 	e.GET("/profile/gameservers", GameserverHandler.GetGameservers, AuthService.RequireAuth)

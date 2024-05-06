@@ -47,4 +47,8 @@ func main() {
 		db.Create(&price)
 	}
 
+	// Seed Subscriptions
+	db.Migrator().DropTable(&models.Subscription{})
+	db.AutoMigrate(&models.Subscription{})
+
 }

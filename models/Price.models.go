@@ -10,7 +10,6 @@ type Price struct {
 	ID           uuid.UUID `gorm:"type:uuid;primary_key;"`
 	Type         string    // "Memory", "Storage", "Archive"
 	PricePerUnit int
-	StripeID     string
 
 	CurrencyID uuid.UUID
 	Currency   Currency

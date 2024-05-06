@@ -30,12 +30,13 @@ func main() {
 	GameService := services.NewGameService(database)
 	CurrencyService := services.NewCurrencyService(database)
 	PriceService := services.NewPriceService(database)
+	StripeService := services.NewStripeService()
 
 	// Handlers
 	HomeHandler := handlers.NewHomeHandler()
 	GameHandler := handlers.NewGameHandler(GameService)
 	SupportHandler := handlers.NewSupportHandler()
-	StoreHandler := handlers.NewStoreHandler(CurrencyService, PriceService)
+	StoreHandler := handlers.NewStoreHandler(CurrencyService, PriceService, StripeService)
 	AuthHandler := handlers.NewAuthHandler(AuthService, UserService)
 	GameserverHandler := handlers.NewGameserverHandler(GameserverService, GameService)
 

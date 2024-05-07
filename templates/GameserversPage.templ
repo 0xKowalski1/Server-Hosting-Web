@@ -1,13 +1,16 @@
 package templates
 
-import "fmt"
-
 import(
     "0xKowalski1/server-hosting-web/models"
-    "strconv"
+    "strconv"    
+    "fmt"
 )
 
-templ GameserversPage(gameservers []models.Gameserver) {
+css resourceBar(percent float32) {
+	width: { fmt.Sprintf("%f%%", percent) };
+}
+
+templ GameserversPage(gameservers []models.Gameserver, usedMemory int,  usedStorage int,usedMemoryPercent float32, usedStoragePercent float32, user *models.User) {
     <div class="p-8 min-h-screen">
 <div class="w-full max-w-screen-2xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between">
     <!-- Upgrade Button -->
@@ -22,17 +25,17 @@ templ GameserversPage(gameservers []models.Gameserver) {
     <div class="flex-grow flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 w-full p-5">
         <!-- Memory Usage -->
         <div class="w-full px-8">
-            <p class="text-center pb-2"><span class="font-bold">Memory</span> 0/8 GB</p>
+            <p class="text-center pb-2"><span class="font-bold">Memory</span> {strconv.Itoa(usedMemory)}/{strconv.Itoa(user.Subscription.MemoryGB)} GB</p>
             <div class="bg-gray-700 rounded-full h-2.5">
-                <div class="bg-green-600 h-2.5 rounded-full" style="width: 70%"></div>
+                <div class={"bg-green-600 h-2.5 rounded-full", resourceBar(usedMemoryPercent)}></div>
             </div>
         </div>
 
         <!-- Storage Usage -->
         <div class="w-full px-8">
-            <p class="text-center pb-2"><span class="font-bold">Storage</span> 0/20 GB</p>
+            <p class="text-center pb-2"><span class="font-bold">Storage</span> {strconv.Itoa(usedStorage)}/{strconv.Itoa(user.Subscription.StorageGB)} GB</p>
             <div class="bg-gray-700 rounded-full h-2.5">
-                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 55%"></div>
+                <div  class={"bg-blue-600 h-2.5 rounded-full", resourceBar(usedStoragePercent)}></div>
             </div>
         </div>
     </div>

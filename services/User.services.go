@@ -40,7 +40,7 @@ func (service *UserService) FindOrCreateUser(unknownUser models.User) (models.Us
 
 func (service *UserService) GetUser(userID string) (*models.User, error) {
 	var user *models.User
-	result := service.DB.Where("id = ?", userID).First(&user)
+	result := service.DB.Preload("Subscription").Where("id = ?", userID).First(&user)
 	if result.Error != nil {
 		log.Printf("User not found: %s, error: %v", userID, result.Error)
 		return nil, result.Error

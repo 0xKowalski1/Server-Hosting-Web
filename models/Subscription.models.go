@@ -11,7 +11,6 @@ type Subscription struct {
 	ID string // Use ID from stripe
 
 	UserID string
-	User   User
 
 	Status stripe.SubscriptionStatus
 

@@ -44,7 +44,31 @@ func (gh *GameserverHandler) GetGameservers(c echo.Context) error {
 		// Do something
 	}
 
-	return Render(c, 200, templates.GameserversPage(gameservers))
+	var user *models.User
+	userInterface := c.Get("user")
+	if userInterface != nil {
+		userConversion, ok := userInterface.(*models.User)
+		if ok {
+			user = userConversion
+		}
+	}
+
+	var usedMemory, usedStorage int
+	for _, gameserver := range gameservers {
+		usedMemory += gameserver.MemoryLimit
+		usedStorage += gameserver.StorageLimit
+	}
+
+	var usedMemoryPercentage, usedStoragePercentage float32
+	// Handle case where subscription is 0, which would cause a divide by 0
+	if user.Subscription.MemoryGB > 0 {
+		usedMemoryPercentage = (float32(usedMemory) / float32(user.Subscription.MemoryGB)) * 100
+	}
+	if user.Subscription.StorageGB > 0 {
+		usedStoragePercentage = (float32(usedStorage) / float32(user.Subscription.StorageGB)) * 100
+	}
+
+	return Render(c, 200, templates.GameserversPage(gameservers, usedMemory, usedStorage, usedMemoryPercentage, usedStoragePercentage, user))
 }
 
 func (gh *GameserverHandler) CreateGameserver(c echo.Context) error {

@@ -60,7 +60,7 @@ func main() {
 
 	/// Auth
 	e.GET("/login", AuthHandler.GetLogin)
-	e.GET("/logout", AuthHandler.PostLogout)
+	e.GET("/logout", AuthHandler.PostLogout) // Does not require actual auth, all it does is deletes session cookies
 	e.GET("/auth/:provider", AuthHandler.BeginAuth)
 	e.GET("/auth/:provider/callback", AuthHandler.AuthCallback)
 
@@ -69,10 +69,10 @@ func main() {
 
 	// Store
 	e.GET("/store", StoreHandler.GetStore)
-	e.POST("/store", StoreHandler.SubmitStoreForm)
 	e.GET("/store/guided", StoreHandler.GetGuidedStoreFlow)
 	e.GET("/store/advanced", StoreHandler.GetAdvancedStoreFlow)
-	e.GET("/store/callback", StoreHandler.StripeSuccessCallback)
+	e.POST("/store", StoreHandler.SubmitStoreForm, AuthService.RequireAuth)
+	e.GET("/store/callback", StoreHandler.StripeSuccessCallback, AuthService.RequireAuth)
 
 	/// Profile
 	e.GET("/profile/gameservers", GameserverHandler.GetGameservers, AuthService.RequireAuth)

@@ -109,7 +109,7 @@ func (ss *StripeService) CreateSubscription(stripeSubscription *stripe.Subscript
 	subscription := &models.Subscription{
 		ID: stripeSubscription.ID,
 
-		User: user,
+		UserID: user.ID,
 
 		Status: stripeSubscription.Status,
 

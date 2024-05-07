@@ -134,7 +134,7 @@
 ## Everything shifts when you all the search results disappear (games, due to scrollbar disappearing) -
 ## Tailwind was purging classes (like bg-red-700) that I was using, switched to CDN for now -  ✓
 ## Resource bar in gameserver card should handle cases greater then 100% usage - 
-
+## User can go back on checkout and keep the stripe session id, they can manually go to the callback and weirdness ensues -
 
 # Before Relase
 ## Cors -

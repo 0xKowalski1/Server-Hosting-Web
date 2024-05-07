@@ -76,8 +76,6 @@ func (ah *AuthHandler) AuthCallback(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Authentication failed")
 	}
 
-	log.Println(authUser)
-
 	_, err = ah.userService.FindOrCreateUser(models.User{Provider: provider, ID: authUser.UserID, Email: authUser.Email})
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create or find user")
@@ -85,7 +83,6 @@ func (ah *AuthHandler) AuthCallback(c echo.Context) error {
 
 	// Store the authenticated user session
 	if err := ah.authService.StoreUserSession(c, authUser); err != nil {
-		log.Printf("Error storing user session: %v\n", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to store user session")
 	}
 

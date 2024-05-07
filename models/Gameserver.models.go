@@ -14,7 +14,7 @@ type GameserverFormData struct {
 type Gameserver struct {
 	gorm.Model
 	ID   uuid.UUID `gorm:"type:uuid;primary_key;" validate:"required,uuid"`
-	Name string    `validate:"required,min=3,max=100"`
+	Name string    `validate:"required,min=1,max=100"`
 
 	// Belongs To User
 	UserID string `validate:"required"`

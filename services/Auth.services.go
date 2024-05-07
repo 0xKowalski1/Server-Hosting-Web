@@ -2,7 +2,7 @@ package services
 
 import (
 	"0xKowalski1/server-hosting-web/config"
-	"0xKowalski1/server-hosting-web/models"
+	"0xKowalski1/server-hosting-web/utils"
 	"fmt"
 	"net/http"
 
@@ -85,17 +85,14 @@ func (service *AuthService) GetUserFromSession(c echo.Context) (goth.User, error
 func (service *AuthService) RequireAuth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// User set in previous middleware
-		userInterface := c.Get("user")
-		if userInterface == nil {
+		user := utils.GetUserFromEchoContext(c)
+
+		if user == nil {
 			return c.Redirect(http.StatusTemporaryRedirect, "/login")
-		} else {
-			_, ok := userInterface.(*models.User)
-			if ok {
-				return next(c)
-			} else {
-				return c.Redirect(http.StatusTemporaryRedirect, "/login")
-			}
+
 		}
+
+		return next(c)
 	}
 }
 

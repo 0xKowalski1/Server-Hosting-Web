@@ -4,6 +4,7 @@ import (
 	"0xKowalski1/server-hosting-web/models"
 	"0xKowalski1/server-hosting-web/services"
 	"0xKowalski1/server-hosting-web/templates"
+	"0xKowalski1/server-hosting-web/utils"
 	"log"
 	"strconv"
 
@@ -40,14 +41,7 @@ func (gh *GameserverHandler) NewGameserverForm(c echo.Context) error {
 }
 
 func (gh *GameserverHandler) GetGameservers(c echo.Context) error {
-	var user *models.User
-	userInterface := c.Get("user")
-	if userInterface != nil {
-		userConversion, ok := userInterface.(*models.User)
-		if ok {
-			user = userConversion
-		}
-	}
+	user := utils.GetUserFromEchoContext(c)
 
 	gameservers, err := gh.GameserverService.GetGameservers(user.ID)
 
@@ -70,6 +64,8 @@ func (gh *GameserverHandler) GetGameservers(c echo.Context) error {
 }
 
 func (gh *GameserverHandler) CreateGameserver(c echo.Context) error {
+	user := utils.GetUserFromEchoContext(c)
+
 	game, err := gh.GameService.GetGameByID(c.FormValue("game"))
 	if err != nil {
 		//Do something
@@ -93,6 +89,7 @@ func (gh *GameserverHandler) CreateGameserver(c echo.Context) error {
 		GameID:       game.ID,
 		MemoryLimit:  memoryLimit,
 		StorageLimit: storageLimit,
+		UserID:       user.ID,
 	}
 
 	_, err = gh.GameserverService.CreateGameserver(newGameserver, gh.StripeService)

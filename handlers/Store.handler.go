@@ -4,6 +4,7 @@ import (
 	"0xKowalski1/server-hosting-web/models"
 	"0xKowalski1/server-hosting-web/services"
 	"0xKowalski1/server-hosting-web/templates"
+	"0xKowalski1/server-hosting-web/utils"
 	"net/http"
 	"time"
 
@@ -104,14 +105,8 @@ func (sh *StoreHandler) StripeSuccessCallback(c echo.Context) error {
 
 	}
 
-	var user *models.User
-	userInterface := c.Get("user")
-	if userInterface != nil {
-		userConversion, ok := userInterface.(*models.User)
-		if ok {
-			user = userConversion
-		}
-	}
+	user := utils.GetUserFromEchoContext(c)
+
 	if user == nil {
 		// Bad error!
 		log.Println(err)
@@ -139,14 +134,7 @@ func (sh *StoreHandler) StripeSuccessCallback(c echo.Context) error {
 }
 
 func (sh *StoreHandler) getPrices(c echo.Context) (map[string]models.Price, error) {
-	var user *models.User
-	userInterface := c.Get("user")
-	if userInterface != nil {
-		userConversion, ok := userInterface.(*models.User)
-		if ok {
-			user = userConversion
-		}
-	}
+	user := utils.GetUserFromEchoContext(c)
 
 	var currency *models.Currency
 	var err error // Avoid variable shadowing

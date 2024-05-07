@@ -12,11 +12,21 @@ import (
 	"0xKowalski1/server-hosting-web/db"
 	"0xKowalski1/server-hosting-web/handlers"
 	"0xKowalski1/server-hosting-web/services"
+
+	"github.com/stripe/stripe-go/v78"
+
+	Orchestrator "0xKowalski1/container-orchestrator/api"
 )
 
 func main() {
 	// Connect to database
 	database := db.InitDB()
+
+	// Create a container orchestrator wrapper
+	orchestratorWrapper := Orchestrator.NewApiWrapper("development", "localhost") // Get me from env
+
+	// Init Stripe
+	stripe.Key = config.Envs.StripeSecretKey
 
 	e := echo.New()
 
@@ -26,7 +36,7 @@ func main() {
 	// Services
 	AuthService := services.NewAuthService(database)
 	UserService := services.NewUserService(database)
-	GameserverService := services.NewGameserverService(database)
+	GameserverService := services.NewGameserverService(database, orchestratorWrapper)
 	GameService := services.NewGameService(database)
 	CurrencyService := services.NewCurrencyService(database)
 	PriceService := services.NewPriceService(database)

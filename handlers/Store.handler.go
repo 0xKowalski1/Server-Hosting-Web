@@ -148,7 +148,7 @@ func (sh *StoreHandler) getPrices(c echo.Context) (map[string]models.Price, erro
 		}
 	}
 
-	var currency models.Currency
+	var currency *models.Currency
 	var err error // Avoid variable shadowing
 	if user != nil {
 		currency, err = sh.CurrencyService.GetCurrencyById(user.CurrencyID)

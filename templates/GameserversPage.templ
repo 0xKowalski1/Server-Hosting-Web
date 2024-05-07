@@ -10,7 +10,7 @@ css resourceBar(percent float32) {
 	width: { fmt.Sprintf("%f%%", percent) };
 }
 
-templ GameserversPage(gameservers []models.Gameserver, usedMemory int,  usedStorage int,usedMemoryPercent float32, usedStoragePercent float32, user *models.User) {
+templ GameserversPage(gameservers []models.Gameserver, usedMemory int,  usedStorage int, usedMemoryPercent float32, usedStoragePercent float32, user *models.User) {
     <div class="p-8 min-h-screen">
 <div class="w-full max-w-screen-2xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between">
     <!-- Upgrade Button -->

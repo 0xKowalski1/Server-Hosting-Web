@@ -92,7 +92,7 @@ func (gh *GameserverHandler) CreateGameserver(c echo.Context) error {
 
 	newGameserver := models.Gameserver{
 		Name:         c.FormValue("name"),
-		Game:         game,
+		Game:         *game,
 		MemoryLimit:  memoryLimit,
 		StorageLimit: storageLimit,
 	}

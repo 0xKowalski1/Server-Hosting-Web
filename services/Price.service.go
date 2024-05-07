@@ -14,7 +14,7 @@ func NewPriceService(db *gorm.DB) *PriceService {
 }
 
 // Gets all prices for a specific currency
-func (service *PriceService) GetPrices(currency models.Currency) ([]models.Price, error) {
+func (service *PriceService) GetPrices(currency *models.Currency) ([]models.Price, error) {
 	var prices []models.Price
 
 	result := service.DB.Where("currency_id = ?", currency.ID).Find(&prices)

@@ -1,7 +1,6 @@
 package services
 
 import (
-	"0xKowalski1/server-hosting-web/config"
 	"0xKowalski1/server-hosting-web/models"
 	"fmt"
 	"strconv"
@@ -18,15 +17,12 @@ type StripeService struct {
 }
 
 func NewStripeService(db *gorm.DB) *StripeService {
-	// Init Stripe
-	stripe.Key = config.Envs.StripeSecretKey
-
 	return &StripeService{
 		DB: db,
 	}
 }
 
-func (ss *StripeService) CreateCheckoutSession(memory, storage, archive int, prices map[string]models.Price) (*stripe.CheckoutSession, error) {
+func (service *StripeService) CreateCheckoutSession(memory, storage, archive int, prices map[string]models.Price) (*stripe.CheckoutSession, error) {
 	memoryCost := memory * prices["memory"].PricePerUnit
 	storageCost := storage * prices["storage"].PricePerUnit
 	archiveCost := archive * prices["archive"].PricePerUnit
@@ -74,36 +70,43 @@ func (ss *StripeService) CreateCheckoutSession(memory, storage, archive int, pri
 		CancelURL:  stripe.String(domain + "/store"),
 	}
 
-	return session.New(params)
+	session, err := session.New(params)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to create a new checkout session: %v", err)
+	}
+
+	return session, nil
 }
 
-func (ss *StripeService) CreateSubscription(stripeSubscription *stripe.Subscription, user models.User) (*models.Subscription, error) {
-	// Pain
+func (service *StripeService) CreateSubscription(stripeSubscription *stripe.Subscription, user models.User) (*models.Subscription, error) {
 	memoryGB, errMemory := strconv.Atoi(stripeSubscription.Metadata["memory_gb"])
 	if errMemory != nil {
-		return nil, errMemory
+		return nil, fmt.Errorf("error converting memory_gb to int: %v", errMemory)
 	}
+
 	memoryPriceID, errMemoryPrice := uuid.Parse(stripeSubscription.Metadata["memory_price_id"])
 	if errMemoryPrice != nil {
-		return nil, errMemoryPrice
+		return nil, fmt.Errorf("error parsing memory_price_id UUID: %v", errMemoryPrice)
 	}
 
 	storageGB, errStorage := strconv.Atoi(stripeSubscription.Metadata["storage_gb"])
 	if errStorage != nil {
-		return nil, errStorage
+		return nil, fmt.Errorf("error converting storage_gb to int: %v", errStorage)
 	}
+
 	storagePriceID, errStoragePrice := uuid.Parse(stripeSubscription.Metadata["storage_price_id"])
 	if errStoragePrice != nil {
-		return nil, errStoragePrice
+		return nil, fmt.Errorf("error parsing storage_price_id UUID: %v", errStoragePrice)
 	}
 
 	archiveGB, errArchive := strconv.Atoi(stripeSubscription.Metadata["archive_gb"])
 	if errArchive != nil {
-		return nil, errArchive
+		return nil, fmt.Errorf("error converting archive_gb to int: %v", errArchive)
 	}
+
 	archivePriceID, errArchivePrice := uuid.Parse(stripeSubscription.Metadata["archive_price_id"])
 	if errArchivePrice != nil {
-		return nil, errArchivePrice
+		return nil, fmt.Errorf("error parsing archive_price_id UUID: %v", errArchivePrice)
 	}
 
 	subscription := &models.Subscription{
@@ -123,18 +126,31 @@ func (ss *StripeService) CreateSubscription(stripeSubscription *stripe.Subscript
 		ArchivePriceID: archivePriceID,
 	}
 
-	result := ss.DB.Create(&subscription)
+	result := service.DB.Create(&subscription)
 	if result.Error != nil {
-		return nil, result.Error
+		return nil, fmt.Errorf("error creating subscription in the database: %v", result.Error)
 	}
 
 	return subscription, nil
 }
 
-func (ss *StripeService) GetStripeSession(sessionID string) (*stripe.CheckoutSession, error) {
-	return session.Get(sessionID, nil)
+func (service *StripeService) GetStripeSession(sessionID string) (*stripe.CheckoutSession, error) {
+	session, err := session.Get(sessionID, nil)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to get stripe session with ID: %s due to error: %v", sessionID, err)
+	}
+
+	return session, nil
 }
 
-func (ss *StripeService) GetStripeSubscription(subscriptionID string) (*stripe.Subscription, error) {
-	return subscription.Get(subscriptionID, nil)
+func (service *StripeService) GetStripeSubscription(subscriptionID string) (*stripe.Subscription, error) {
+
+	subscription, err := subscription.Get(subscriptionID, nil)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to get stripe subscription at ID: %s due to error: %v", subscriptionID, err)
+	}
+
+	return subscription, nil
 }

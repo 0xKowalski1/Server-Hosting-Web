@@ -2,6 +2,7 @@ package services
 
 import (
 	"0xKowalski1/server-hosting-web/models"
+	"fmt"
 	"strings"
 
 	"github.com/google/uuid"
@@ -27,24 +28,24 @@ func (service *GameService) GetGames(searchQuery string) ([]models.Game, error) 
 
 	result := query.Find(&games)
 	if result.Error != nil {
-		return nil, result.Error
+		return nil, fmt.Errorf("Failed to query games in database: %v", result.Error)
 	}
 
 	return games, nil
 }
 
 // Should take gameID as UUID
-func (service *GameService) GetGameByID(gameID string) (models.Game, error) {
-	var game models.Game
+func (service *GameService) GetGameByID(gameID string) (*models.Game, error) {
+	var game *models.Game
 
 	id, err := uuid.Parse(gameID)
 	if err != nil {
-		return game, err
+		return nil, fmt.Errorf("Failed to parse uuid from gameID: %s due to error: %v", gameID, err)
 	}
 
 	result := service.DB.First(&game, "id = ?", id)
 	if result.Error != nil {
-		return game, result.Error
+		return nil, fmt.Errorf("Failed to find game at ID: %s due to error: %v", gameID, result.Error)
 	}
 
 	return game, nil

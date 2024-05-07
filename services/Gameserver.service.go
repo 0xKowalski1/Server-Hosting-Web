@@ -3,9 +3,9 @@ package services
 import (
 	Orchestrator "0xKowalski1/container-orchestrator/api"
 	OrchestratorModels "0xKowalski1/container-orchestrator/models"
+	"fmt"
 
 	"0xKowalski1/server-hosting-web/models"
-	"log"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -16,18 +16,17 @@ type GameserverService struct {
 	OrchestratorWrapper *Orchestrator.WrapperClient
 }
 
-func NewGameserverService(db *gorm.DB) *GameserverService {
+func NewGameserverService(db *gorm.DB, orchestratorWrapper *Orchestrator.WrapperClient) *GameserverService {
 	return &GameserverService{
 		DB:                  db,
-		OrchestratorWrapper: Orchestrator.NewApiWrapper("development", "localhost"), // Get me from env
+		OrchestratorWrapper: orchestratorWrapper,
 	}
 }
 
 func (service *GameserverService) CreateGameserver(newGameserver models.Gameserver) (*models.Gameserver, error) {
 	result := service.DB.Create(&newGameserver)
 	if result.Error != nil {
-		log.Printf("Failed to create gameserver: %v", result.Error)
-		return nil, result.Error
+		return nil, fmt.Errorf("Failed to create gameserver with options: %+v due to error: %v", newGameserver, result.Error)
 	}
 
 	return &newGameserver, nil
@@ -38,23 +37,23 @@ func (service *GameserverService) GetGameservers() ([]models.Gameserver, error) 
 
 	result := service.DB.Preload("Game").Find(&gameservers)
 	if result.Error != nil {
-		return nil, result.Error
+		return nil, fmt.Errorf("Failed to query database for gameservers: %v", result.Error)
 	}
 
 	return gameservers, nil
 }
 
-func (service *GameserverService) GetGameserverByID(gameserverID string) (models.Gameserver, error) {
-	var gameserver models.Gameserver
+func (service *GameserverService) GetGameserverByID(gameserverID string) (*models.Gameserver, error) {
+	var gameserver *models.Gameserver
 
 	id, err := uuid.Parse(gameserverID)
 	if err != nil {
-		return gameserver, err
+		return nil, fmt.Errorf("Failed to parse gameserver ID: %s due to error: %v", gameserverID, err)
 	}
 
 	result := service.DB.First(&gameserver, "id = ?", id)
 	if result.Error != nil {
-		return gameserver, result.Error
+		return nil, fmt.Errorf("Failed to query database for gameserver at ID: %s due to error: %v", gameserverID, result.Error)
 	}
 
 	return gameserver, nil
@@ -62,7 +61,7 @@ func (service *GameserverService) GetGameserverByID(gameserverID string) (models
 
 // Orchestrator
 
-func (service *GameserverService) DeployGameserver(gameserver models.Gameserver) error {
+func (service *GameserverService) DeployGameserver(gameserver *models.Gameserver) error {
 	newContainerRequest := OrchestratorModels.CreateContainerRequest{
 		ID:           gameserver.ID.String(),
 		Image:        gameserver.Game.ContainerImage,
@@ -82,9 +81,7 @@ func (service *GameserverService) DeployGameserver(gameserver models.Gameserver)
 
 	_, err := service.OrchestratorWrapper.CreateContainer(newContainerRequest)
 	if err != nil {
-		// Do something
-		log.Printf("Error deploying gameserver: %v", err)
-		return err
+		return fmt.Errorf("Error deploying gameserver: %v", err)
 	}
 
 	return nil

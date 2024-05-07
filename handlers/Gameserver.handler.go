@@ -13,12 +13,14 @@ import (
 type GameserverHandler struct {
 	GameserverService *services.GameserverService
 	GameService       *services.GameService
+	StripeService     *services.StripeService
 }
 
-func NewGameserverHandler(gameserverService *services.GameserverService, gameService *services.GameService) *GameserverHandler {
+func NewGameserverHandler(gameserverService *services.GameserverService, gameService *services.GameService, stripeService *services.StripeService) *GameserverHandler {
 	return &GameserverHandler{
 		GameserverService: gameserverService,
 		GameService:       gameService,
+		StripeService:     stripeService,
 	}
 }
 
@@ -38,12 +40,6 @@ func (gh *GameserverHandler) NewGameserverForm(c echo.Context) error {
 }
 
 func (gh *GameserverHandler) GetGameservers(c echo.Context) error {
-	gameservers, err := gh.GameserverService.GetGameservers()
-
-	if err != nil {
-		// Do something
-	}
-
 	var user *models.User
 	userInterface := c.Get("user")
 	if userInterface != nil {
@@ -53,11 +49,13 @@ func (gh *GameserverHandler) GetGameservers(c echo.Context) error {
 		}
 	}
 
-	var usedMemory, usedStorage int
-	for _, gameserver := range gameservers {
-		usedMemory += gameserver.MemoryLimit
-		usedStorage += gameserver.StorageLimit
+	gameservers, err := gh.GameserverService.GetGameservers(user.ID)
+
+	if err != nil {
+		// Do something
 	}
+
+	usedMemory, usedStorage := gh.GameserverService.GetUsedResources(gameservers)
 
 	var usedMemoryPercentage, usedStoragePercentage float32
 	// Handle case where subscription is 0, which would cause a divide by 0
@@ -97,7 +95,7 @@ func (gh *GameserverHandler) CreateGameserver(c echo.Context) error {
 		StorageLimit: storageLimit,
 	}
 
-	_, err = gh.GameserverService.CreateGameserver(newGameserver)
+	_, err = gh.GameserverService.CreateGameserver(newGameserver, gh.StripeService)
 
 	if err != nil {
 		// Should send back errors for new gameserver form

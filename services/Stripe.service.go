@@ -154,3 +154,34 @@ func (service *StripeService) GetStripeSubscription(subscriptionID string) (*str
 
 	return subscription, nil
 }
+
+func (service *StripeService) GetSubscriptionByUserID(userID string) (*models.Subscription, error) {
+	var subscription *models.Subscription
+
+	result := service.DB.First(&subscription, "user_id = ?", userID)
+	if result.Error != nil {
+		return nil, fmt.Errorf("Failed to query database for subscription at UserID: %s due to error: %v", userID, result.Error)
+	}
+	return subscription, nil
+}
+
+// Redundant to return a bool and an error, so error = Cannot allocate
+func (service *StripeService) CanAllocateResources(userID string, memoryGB, storageGB int, gameserverService *GameserverService) error {
+	subscription, err := service.GetSubscriptionByUserID(userID)
+	if err != nil {
+		return fmt.Errorf("Cannot allocate resources as we cant find a subscription with UserID: %s due to error: %v", userID, err)
+	}
+
+	gameservers, err := gameserverService.GetGameservers(userID)
+	if err != nil {
+		return fmt.Errorf("Cannot allocate resources as query for gameservers with UserID: %s failed due to error: %v", userID, err)
+	}
+
+	usedMemory, usedStorage := gameserverService.GetUsedResources(gameservers)
+
+	if ((usedMemory + memoryGB) > subscription.MemoryGB) || ((usedStorage + storageGB) > subscription.StorageGB) {
+		return fmt.Errorf("Cannot allocate resources as requested resources exceeds subscription limits")
+	}
+
+	return nil
+}

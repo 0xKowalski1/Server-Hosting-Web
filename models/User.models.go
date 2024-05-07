@@ -11,6 +11,10 @@ type User struct {
 	Email    string `gorm:"uniqueIndex"`
 	Provider string
 
+	// Has many gameservers
+	Gameservers []Gameserver
+
+	// Has one currency (preffered currency)
 	CurrencyID uuid.UUID
 	Currency   Currency
 

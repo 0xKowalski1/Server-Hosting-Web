@@ -23,7 +23,12 @@ func NewGameserverService(db *gorm.DB, orchestratorWrapper *Orchestrator.Wrapper
 	}
 }
 
-func (service *GameserverService) CreateGameserver(newGameserver models.Gameserver) (*models.Gameserver, error) {
+func (service *GameserverService) CreateGameserver(newGameserver models.Gameserver, stripeService *StripeService) (*models.Gameserver, error) {
+	err := stripeService.CanAllocateResources(newGameserver.UserID, newGameserver.MemoryLimit, newGameserver.StorageLimit, service)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to create gameserver as requested resources would exceed subscription limits: %v", err)
+	}
+
 	result := service.DB.Create(&newGameserver)
 	if result.Error != nil {
 		return nil, fmt.Errorf("Failed to create gameserver with options: %+v due to error: %v", newGameserver, result.Error)
@@ -32,15 +37,25 @@ func (service *GameserverService) CreateGameserver(newGameserver models.Gameserv
 	return &newGameserver, nil
 }
 
-func (service *GameserverService) GetGameservers() ([]models.Gameserver, error) {
+func (service *GameserverService) GetGameservers(userID string) ([]models.Gameserver, error) {
 	var gameservers []models.Gameserver
 
-	result := service.DB.Preload("Game").Find(&gameservers)
+	result := service.DB.Preload("Game").Find(&gameservers, "user_id = ?", userID)
 	if result.Error != nil {
 		return nil, fmt.Errorf("Failed to query database for gameservers: %v", result.Error)
 	}
 
 	return gameservers, nil
+}
+
+func (service *GameserverService) GetUsedResources(gameservers []models.Gameserver) (int, int) {
+	var usedMemory, usedStorage int
+	for _, gameserver := range gameservers {
+		usedMemory += gameserver.MemoryLimit
+		usedStorage += gameserver.StorageLimit
+	}
+
+	return usedMemory, usedStorage
 }
 
 func (service *GameserverService) GetGameserverByID(gameserverID string) (*models.Gameserver, error) {

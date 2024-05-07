@@ -3,6 +3,7 @@ package testutils
 import (
 	"0xKowalski1/server-hosting-web/models"
 
+	"github.com/stripe/stripe-go/v78"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -116,4 +117,26 @@ func SetupUser(db *gorm.DB, currency *models.Currency) *models.User {
 	}
 
 	return user
+}
+
+func SetupSubscription(db *gorm.DB, user *models.User, memoryPrice *models.Price, storagePrice *models.Price, archivePrice *models.Price) *models.Subscription {
+	subscription := &models.Subscription{
+		ID:        "1",
+		UserID:    user.ID,
+		Status:    stripe.SubscriptionStatusActive,
+		MemoryGB:  10,
+		StorageGB: 10,
+		ArchiveGB: 10,
+
+		MemoryPriceID:  memoryPrice.ID,
+		StoragePriceID: storagePrice.ID,
+		ArchivePriceID: archivePrice.ID,
+	}
+
+	result := db.Create(subscription)
+	if result.Error != nil {
+		panic(result.Error)
+	}
+
+	return subscription
 }

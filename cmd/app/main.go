@@ -48,7 +48,7 @@ func main() {
 	SupportHandler := handlers.NewSupportHandler()
 	StoreHandler := handlers.NewStoreHandler(CurrencyService, PriceService, StripeService)
 	AuthHandler := handlers.NewAuthHandler(AuthService, UserService)
-	GameserverHandler := handlers.NewGameserverHandler(GameserverService, GameService)
+	GameserverHandler := handlers.NewGameserverHandler(GameserverService, GameService, StripeService)
 
 	// Middleware
 	//e.Use(middleware.Logger())

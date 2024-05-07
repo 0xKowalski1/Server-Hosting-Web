@@ -31,3 +31,7 @@ build:
 .PHONY: seed
 seed:
 	go run ./cmd/seed/seed.go
+
+.PHONY: test
+test:
+	go test -v  ./tests/...

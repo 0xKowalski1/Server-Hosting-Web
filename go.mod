@@ -11,7 +11,9 @@ require (
 	github.com/gorilla/sessions v1.1.1
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/markbates/goth v1.79.0
+	github.com/stripe/stripe-go/v78 v78.5.0
 	gorm.io/driver/postgres v1.5.7
+	gorm.io/driver/sqlite v1.5.5
 	gorm.io/gorm v1.25.9
 )
 
@@ -48,10 +50,10 @@ require (
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mattn/go-sqlite3 v1.14.17 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.0 // indirect
-	github.com/stripe/stripe-go/v78 v78.5.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect

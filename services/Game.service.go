@@ -22,7 +22,7 @@ func (service *GameService) GetGames(searchQuery string) ([]models.Game, error) 
 	query := service.DB.Model(&models.Game{})
 
 	if searchQuery != "" {
-		searchQuery = "%" + strings.ToLower(searchQuery) + "%" // Prepare the search query for case-insensitive matching
+		searchQuery = "%" + strings.ToLower(searchQuery) + "%"
 		query = query.Where("lower(name) LIKE ?", searchQuery)
 	}
 
@@ -34,7 +34,6 @@ func (service *GameService) GetGames(searchQuery string) ([]models.Game, error) 
 	return games, nil
 }
 
-// Should take gameID as UUID
 func (service *GameService) GetGameByID(gameID string) (*models.Game, error) {
 	var game *models.Game
 

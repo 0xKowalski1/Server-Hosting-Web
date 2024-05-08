@@ -74,7 +74,7 @@ templ GameserversList(gameservers []models.Gameserver){
 }
 
 templ GameserverCard(gameserver models.Gameserver){
-    <div class="w-full max-w-screen-2xl mx-auto overflow-hidden rounded shadow-lg bg-gray-800 mt-4 mb-4">
+    <div id={"gameserver-"+gameserver.ID.String()} class="w-full max-w-screen-2xl mx-auto overflow-hidden rounded shadow-lg bg-gray-800 mt-4 mb-4">
     <!-- Header  -->
     <div class="flex flex-wrap justify-between items-center px-6 mb-4 mt-4">
         <div class="flex items-center space-x-4 flex-1">
@@ -106,19 +106,30 @@ templ GameserverCard(gameserver models.Gameserver){
     </div>
 
     <!-- Action Buttons -->
-    <div class="px-6 pb-4 flex justify-between items-center flex-wrap">
+    @GameserverCardActionButtons(gameserver)
+    </div>
+   }
+
+templ GameserverCardActionButtons(gameserver models.Gameserver){
+     <div class="px-6 pb-4 flex justify-between items-center flex-wrap">
         <div class="flex space-x-2 mb-2 w-full justify-between md:justify-start md:w-auto">
-            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Start</button>
-            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Stop</button>
-            <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Restart</button>
+            <a href={ templ.SafeURL("/profile/gameservers/"+gameserver.ID.String() +"/start") } hx-post={ "/profile/gameservers/"+gameserver.ID.String() +"/start" } hx-swap="outerHTML" hx-target={"#gameserver-" + gameserver.ID.String()} class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Start</a>
+            <a href={ templ.SafeURL("/profile/gameservers/"+gameserver.ID.String() +"/stop") } hx-post={ "/profile/gameservers/"+gameserver.ID.String() +"/stop" } hx-swap="outerHTML" hx-target={"#gameserver-" + gameserver.ID.String()}  class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Stop</a>
+            <a href={ templ.SafeURL("/profile/gameservers/"+gameserver.ID.String() +"/restart") } hx-post={ "/profile/gameservers/"+gameserver.ID.String() +"/restart" } hx-swap="outerHTML" hx-target={"#gameserver-" + gameserver.ID.String()}   class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Restart</a>
         </div>
         <div class="flex space-x-2 mb-2 w-full justify-between md:justify-start md:w-auto">
-            <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Archive</button>
+        if gameserver.Status != models.GameserverStatusDeployed {
+            <a href={ templ.SafeURL("/profile/gameservers/"+gameserver.ID.String() +"/deploy") } hx-post={ "/profile/gameservers/"+gameserver.ID.String() +"/deploy" } hx-swap="outerHTML" hx-target={"#gameserver-" + gameserver.ID.String()}  class="bg-gray-500 hover:cursor-pointer hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Deploy</a>
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
             <button class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Control Panel</button>
+        }else{
+            <a  href={ templ.SafeURL("/profile/gameservers/"+gameserver.ID.String() +"/archive") } hx-post={ "/profile/gameservers/"+gameserver.ID.String() +"/archive" } hx-swap="outerHTML" hx-target={ "#gameserver-" + gameserver.ID.String() } class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Archive</a>
+               <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
+            <button class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Control Panel</button>
+        }
+         
         </div>
     </div>
-</div>
 }
 
 templ GameserverForm(formData models.GameserverFormData, games []models.Game) {
@@ -133,7 +144,7 @@ templ GameserverForm(formData models.GameserverFormData, games []models.Game) {
         <div class="mb-4">
             @GameDropdown(games, formData.GameID)
         </div>
-
+div
         <div class="mb-4">
             @MemorySlider()
         </div>

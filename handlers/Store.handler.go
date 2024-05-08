@@ -85,38 +85,35 @@ func (sh *StoreHandler) GetAdvancedStoreFlow(c echo.Context) error {
 }
 
 func (sh *StoreHandler) StripeSuccessCallback(c echo.Context) error {
+	user := utils.GetUserFromEchoContext(c)
+
+	if user == nil {
+		// Bad error!
+		log.Println("No user in stripe callback")
+	}
+
 	cookie, err := c.Cookie("stripeSessionID")
 	if err != nil || cookie.Value == "" {
 		// Bad error!
-		log.Println(err)
-
+		log.Println("Failed to retrieve stripe session ID:", err)
 	}
 
 	session, err := sh.StripeService.GetStripeSession(cookie.Value)
 	if err != nil {
 		// Bad error!
-		log.Println(err)
-
+		log.Println("Failed to get stripe session:", err)
 	}
 
 	subscription, err := sh.StripeService.GetStripeSubscription(session.Subscription.ID)
 	if err != nil {
-		log.Println(err)
-
-	}
-
-	user := utils.GetUserFromEchoContext(c)
-
-	if user == nil {
 		// Bad error!
-		log.Println(err)
-
+		log.Println("Failed to get stripe subscription:", err)
 	}
 
 	_, err = sh.StripeService.CreateSubscription(subscription, *user)
 	if err != nil {
 		// Bad error!
-		log.Println(err)
+		log.Println("Failed to create db subscription:", err)
 	}
 
 	// Reset cookie

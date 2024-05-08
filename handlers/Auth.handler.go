@@ -5,7 +5,6 @@ import (
 	"0xKowalski1/server-hosting-web/services"
 	"0xKowalski1/server-hosting-web/templates"
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -45,12 +44,8 @@ func (ah *AuthHandler) BeginAuth(c echo.Context) error {
 	r = r.WithContext(context.WithValue(r.Context(), "provider", provider))
 
 	if _, err := gothic.CompleteUserAuth(w, r); err == nil {
-		// Handle user already logged in
-		log.Println("User already logged in.")
 		return Render(c, 200, templates.HomePage())
 	} else {
-		log.Println("Beginning auth process")
-		// Start the authentication process
 		gothic.BeginAuthHandler(w, r)
 	}
 
@@ -72,7 +67,6 @@ func (ah *AuthHandler) AuthCallback(c echo.Context) error {
 	// Complete the user auth and handle the callback from the OAuth provider
 	authUser, err := gothic.CompleteUserAuth(w, r)
 	if err != nil {
-		log.Println("Authentication failed:", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Authentication failed")
 	}
 

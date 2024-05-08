@@ -2,7 +2,6 @@ package services
 
 import (
 	"0xKowalski1/server-hosting-web/config"
-	"0xKowalski1/server-hosting-web/utils"
 	"fmt"
 	"net/http"
 
@@ -80,20 +79,6 @@ func (service *AuthService) GetUserFromSession(c echo.Context) (goth.User, error
 	}
 
 	return authUser, nil
-}
-
-func (service *AuthService) RequireAuth(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		// User set in previous middleware
-		user := utils.GetUserFromEchoContext(c)
-
-		if user == nil {
-			return c.Redirect(http.StatusTemporaryRedirect, "/login")
-
-		}
-
-		return next(c)
-	}
 }
 
 func buildCallbackURL(provider string) string {

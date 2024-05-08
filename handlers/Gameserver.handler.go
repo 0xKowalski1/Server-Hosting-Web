@@ -90,6 +90,7 @@ func (gh *GameserverHandler) CreateGameserver(c echo.Context) error {
 		MemoryLimit:  memoryLimit,
 		StorageLimit: storageLimit,
 		UserID:       user.ID,
+		Status:       models.GameserverStatusUndeployed,
 	}
 
 	_, err = gh.GameserverService.CreateGameserver(newGameserver, gh.StripeService)
@@ -105,25 +106,82 @@ func (gh *GameserverHandler) CreateGameserver(c echo.Context) error {
 }
 
 func (gh *GameserverHandler) DeployGameserver(c echo.Context) error {
-	// Get gameserver
-	gameserverID := c.Param("id")
-	gameserver, err := gh.GameserverService.GetGameserverByID(gameserverID)
+	gameserver := utils.GetGameserverFromEchoContext(c)
+	if gameserver == nil {
+		// 404
+	}
+
+	gameserver, err := gh.GameserverService.DeployGameserver(gameserver)
 	if err != nil {
-		// do something
-		log.Printf("Error finding gameserver at ID - %s: %v", gameserverID, err)
+		log.Printf("Error deploying gameserver at ID - %s: %v", gameserver.ID.String(), err)
 		return err
 	}
 
-	// Check if deployed
+	return Render(c, 200, templates.GameserverCard(*gameserver))
+}
 
-	// Deploy
-	err = gh.GameserverService.DeployGameserver(gameserver)
+func (gh *GameserverHandler) ArchiveGameserver(c echo.Context) error {
+	gameserver := utils.GetGameserverFromEchoContext(c)
+	if gameserver == nil {
+		// 404
+	}
+
+	gameserver, err := gh.GameserverService.ArchiveGameserver(gameserver)
 	if err != nil {
-		log.Printf("Error deploying gameserver at ID - %s: %v", gameserverID, err)
+		log.Printf("Error archiving gameserver at ID - %s: %v", gameserver.ID.String(), err)
 		return err
 	}
 
-	// Persist deployment
+	return Render(c, 200, templates.GameserverCard(*gameserver))
+}
 
-	return nil
+func (gh *GameserverHandler) StartGameserver(c echo.Context) error {
+	gameserver := utils.GetGameserverFromEchoContext(c)
+	if gameserver == nil {
+		// 404
+	}
+
+	gameserver, err := gh.GameserverService.StartGameserver(gameserver)
+	if err != nil {
+		log.Printf("Error starting gameserver at ID - %s: %v", gameserver.ID.String(), err)
+		return err
+	}
+
+	return Render(c, 200, templates.GameserverCard(*gameserver))
+}
+
+func (gh *GameserverHandler) StopGameserver(c echo.Context) error {
+	gameserver := utils.GetGameserverFromEchoContext(c)
+	if gameserver == nil {
+		// 404
+	}
+
+	gameserver, err := gh.GameserverService.StopGameserver(gameserver)
+	if err != nil {
+		log.Printf("Error stopping gameserver at ID - %s: %v", gameserver.ID.String(), err)
+		return err
+	}
+
+	return Render(c, 200, templates.GameserverCard(*gameserver))
+}
+
+func (gh *GameserverHandler) RestartGameserver(c echo.Context) error {
+	gameserver := utils.GetGameserverFromEchoContext(c)
+	if gameserver == nil {
+		// 404
+	}
+
+	gameserver, err := gh.GameserverService.StopGameserver(gameserver)
+	if err != nil {
+		log.Printf("Error stopping gameserver at ID - %s: %v", gameserver.ID.String(), err)
+		return err
+	}
+
+	gameserver, err = gh.GameserverService.StartGameserver(gameserver)
+	if err != nil {
+		log.Printf("Error starting gameserver at ID - %s: %v", gameserver.ID.String(), err)
+		return err
+	}
+
+	return Render(c, 200, templates.GameserverCard(*gameserver))
 }

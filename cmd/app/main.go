@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/labstack/echo/v4/middleware"
+	echomiddleware "github.com/labstack/echo/v4/middleware"
 
 	"0xKowalski1/server-hosting-web/config"
 	"0xKowalski1/server-hosting-web/db"
 	"0xKowalski1/server-hosting-web/handlers"
+	"0xKowalski1/server-hosting-web/middleware"
 	"0xKowalski1/server-hosting-web/services"
 
 	"github.com/stripe/stripe-go/v78"
@@ -51,11 +51,11 @@ func main() {
 	GameserverHandler := handlers.NewGameserverHandler(GameserverService, GameService, StripeService)
 
 	// Middleware
-	//e.Use(middleware.Logger())
-	e.Use(AttachUserToContext(AuthService, UserService))
+	e.Use(echomiddleware.Logger())
+	e.Use(middleware.AttachUserToContext(AuthService, UserService))
 
 	// Configure CORS
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	e.Use(echomiddleware.CORSWithConfig(echomiddleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
@@ -81,39 +81,19 @@ func main() {
 	e.GET("/store", StoreHandler.GetStore)
 	e.GET("/store/guided", StoreHandler.GetGuidedStoreFlow)
 	e.GET("/store/advanced", StoreHandler.GetAdvancedStoreFlow)
-	e.POST("/store", StoreHandler.SubmitStoreForm, AuthService.RequireAuth)
-	e.GET("/store/callback", StoreHandler.StripeSuccessCallback, AuthService.RequireAuth)
+	e.POST("/store", StoreHandler.SubmitStoreForm, middleware.RequireAuth)
+	e.GET("/store/callback", StoreHandler.StripeSuccessCallback, middleware.RequireAuth)
 
 	/// Profile
-	e.GET("/profile/gameservers", GameserverHandler.GetGameservers, AuthService.RequireAuth)
-	e.GET("/profile/gameservers/new", GameserverHandler.NewGameserverForm, AuthService.RequireAuth)
-	e.POST("/profile/gameservers", GameserverHandler.CreateGameserver, AuthService.RequireAuth)
-	e.POST("/profile/gameservers/:id/deploy", GameserverHandler.DeployGameserver, AuthService.RequireAuth)
+	e.GET("/profile/gameservers", GameserverHandler.GetGameservers, middleware.RequireAuth)
+	e.GET("/profile/gameservers/new", GameserverHandler.NewGameserverForm, middleware.RequireAuth)
+	e.POST("/profile/gameservers", GameserverHandler.CreateGameserver, middleware.RequireAuth)
+	e.POST("/profile/gameservers/:id/deploy", GameserverHandler.DeployGameserver, middleware.RequireAuth, middleware.EnsureGameserverOwner(GameserverService))
+	e.POST("/profile/gameservers/:id/archive", GameserverHandler.ArchiveGameserver, middleware.RequireAuth, middleware.EnsureGameserverOwner(GameserverService))
+	e.POST("/profile/gameservers/:id/start", GameserverHandler.StartGameserver, middleware.RequireAuth, middleware.EnsureGameserverOwner(GameserverService))
+	e.POST("/profile/gameservers/:id/stop", GameserverHandler.StopGameserver, middleware.RequireAuth, middleware.EnsureGameserverOwner(GameserverService))
+	e.POST("/profile/gameservers/:id/restart", GameserverHandler.RestartGameserver, middleware.RequireAuth, middleware.EnsureGameserverOwner(GameserverService))
 
 	fmt.Printf("Listening on :%s", config.Envs.Port)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", config.Envs.Port)))
-}
-
-// Should be in a middleware dir
-func AttachUserToContext(authService *services.AuthService, userService *services.UserService) echo.MiddlewareFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			authUser, err := authService.GetUserFromSession(c)
-			if err != nil {
-				log.Printf("Failed to get user from session: %v", err)
-				c.Set("user", nil)
-				return next(c)
-			}
-
-			dbUser, err := userService.GetUser(authUser.UserID)
-			if err != nil {
-				log.Printf("Failed to get user from DB: %v", err)
-				c.Set("user", nil)
-				return next(c)
-			}
-
-			c.Set("user", dbUser)
-			return next(c)
-		}
-	}
 }

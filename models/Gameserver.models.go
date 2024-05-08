@@ -11,6 +11,14 @@ type GameserverFormData struct {
 	GameID string
 }
 
+type GameserverStatus string
+
+const (
+	GameserverStatusUndeployed GameserverStatus = "Undeployed"
+	GameserverStatusDeployed   GameserverStatus = "Deployed"
+	GameserverStatusArchived   GameserverStatus = "Archived"
+)
+
 type Gameserver struct {
 	gorm.Model
 	ID   uuid.UUID `gorm:"type:uuid;primary_key;" validate:"required,uuid"`
@@ -26,6 +34,9 @@ type Gameserver struct {
 	// Resource Limits
 	StorageLimit int `validate:"required,min=1,max=128"`
 	MemoryLimit  int `validate:"required,min=1,max=32"`
+
+	// Status
+	Status GameserverStatus `gorm:"type:varchar(100)" validate:"required,oneof='Undeployed' 'Deployed' 'Archived'"`
 }
 
 // Set unique ID

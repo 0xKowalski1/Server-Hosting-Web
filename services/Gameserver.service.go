@@ -66,7 +66,7 @@ func (service *GameserverService) GetGameserverByID(gameserverID string) (*model
 		return nil, fmt.Errorf("Failed to parse gameserver ID: %s due to error: %v", gameserverID, err)
 	}
 
-	result := service.DB.First(&gameserver, "id = ?", id)
+	result := service.DB.Preload("Game").First(&gameserver, "id = ?", id)
 	if result.Error != nil {
 		return nil, fmt.Errorf("Failed to query database for gameserver at ID: %s due to error: %v", gameserverID, result.Error)
 	}
@@ -76,14 +76,18 @@ func (service *GameserverService) GetGameserverByID(gameserverID string) (*model
 
 // Orchestrator
 
-func (service *GameserverService) DeployGameserver(gameserver *models.Gameserver) error {
+func (service *GameserverService) DeployGameserver(gameserver *models.Gameserver) (*models.Gameserver, error) {
+	if gameserver.Status == models.GameserverStatusDeployed {
+		return nil, fmt.Errorf("Gameserver is already deployed")
+	}
+
 	newContainerRequest := OrchestratorModels.CreateContainerRequest{
 		ID:           gameserver.ID.String(),
 		Image:        gameserver.Game.ContainerImage,
 		Env:          []string{"EULA=TRUE", "MEMORY=4"},
 		StopTimeout:  5,
 		MemoryLimit:  gameserver.MemoryLimit,
-		CpuLimit:     2,
+		CpuLimit:     1,
 		StorageLimit: gameserver.StorageLimit,
 		Ports: []OrchestratorModels.Port{
 			{
@@ -96,8 +100,55 @@ func (service *GameserverService) DeployGameserver(gameserver *models.Gameserver
 
 	_, err := service.OrchestratorWrapper.CreateContainer(newContainerRequest)
 	if err != nil {
-		return fmt.Errorf("Error deploying gameserver: %v", err)
+		return nil, fmt.Errorf("Error deploying gameserver: %v", err)
 	}
 
-	return nil
+	// Update gameserver status
+	gameserver.Status = models.GameserverStatusDeployed
+	if err := service.DB.Save(gameserver).Error; err != nil {
+		return nil, fmt.Errorf("error updating gameserver status: %v", err)
+	}
+
+	return gameserver, nil
+}
+
+func (service *GameserverService) ArchiveGameserver(gameserver *models.Gameserver) (*models.Gameserver, error) {
+	if gameserver.Status != models.GameserverStatusDeployed {
+		return nil, fmt.Errorf("Gameserver not deployed")
+	}
+
+	_, err := service.OrchestratorWrapper.DeleteContainer(gameserver.ID.String())
+	if err != nil {
+		return nil, fmt.Errorf("Error deploying gameserver: %v", err)
+	}
+
+	// Update gameserver status
+	gameserver.Status = models.GameserverStatusArchived
+	if err := service.DB.Save(gameserver).Error; err != nil {
+		return nil, fmt.Errorf("error updating gameserver status: %v", err)
+	}
+
+	return gameserver, nil
+}
+
+func (service *GameserverService) StartGameserver(gameserver *models.Gameserver) (*models.Gameserver, error) {
+	// Check gameserver not already started
+
+	_, err := service.OrchestratorWrapper.StartContainer(gameserver.ID.String())
+	if err != nil {
+		return nil, fmt.Errorf("Error starting gameserver: %v", err)
+	}
+
+	return gameserver, nil
+}
+
+func (service *GameserverService) StopGameserver(gameserver *models.Gameserver) (*models.Gameserver, error) {
+	// Check gameserver not already started
+
+	_, err := service.OrchestratorWrapper.StopContainer(gameserver.ID.String())
+	if err != nil {
+		return nil, fmt.Errorf("Error stopping gameserver: %v", err)
+	}
+
+	return gameserver, nil
 }

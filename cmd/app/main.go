@@ -15,7 +15,7 @@ import (
 
 	"github.com/stripe/stripe-go/v78"
 
-	Orchestrator "0xKowalski1/container-orchestrator/api"
+	Orchestrator "0xKowalski1/container-orchestrator/api-wrapper"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 	database := db.InitDB()
 
 	// Create a container orchestrator wrapper
-	orchestratorWrapper := Orchestrator.NewApiWrapper("development", "localhost") // Get me from env
+	orchestratorWrapper := Orchestrator.NewApiWrapper("localhost") // Get me from env
 
 	// Init Stripe
 	stripe.Key = config.Envs.StripeSecretKey

@@ -1,7 +1,7 @@
 package services
 
 import (
-	Orchestrator "0xKowalski1/container-orchestrator/api"
+	Orchestrator "0xKowalski1/container-orchestrator/api-wrapper"
 	OrchestratorModels "0xKowalski1/container-orchestrator/models"
 	"fmt"
 
@@ -117,7 +117,7 @@ func (service *GameserverService) ArchiveGameserver(gameserver *models.Gameserve
 		return nil, fmt.Errorf("Gameserver not deployed")
 	}
 
-	_, err := service.OrchestratorWrapper.DeleteContainer(gameserver.ID.String())
+	err := service.OrchestratorWrapper.DeleteContainer(gameserver.ID.String())
 	if err != nil {
 		return nil, fmt.Errorf("Error deploying gameserver: %v", err)
 	}

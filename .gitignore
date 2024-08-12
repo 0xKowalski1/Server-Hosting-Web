@@ -5,3 +5,4 @@ go.sum
 assets/css/tailwind.css
 assets/css/tailwind.min.css
 shell.nix
+.direnv
